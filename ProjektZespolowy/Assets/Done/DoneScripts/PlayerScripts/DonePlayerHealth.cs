@@ -7,7 +7,7 @@ public class DonePlayerHealth : MonoBehaviour
     public float health = 100f;							// How much health the player has left.
 	public float resetAfterDeathTime = 5f;				// How much time from the player dying to the level reseting.
 	public AudioClip deathClip;							// The sound effect of the player dying.
-	//public Slider suwakBateria;
+	public Slider suwakBateria;
 	//public Text textIloscIteracji;
 
 	private Animator anim;								// Reference to the animator component.
@@ -97,7 +97,7 @@ public class DonePlayerHealth : MonoBehaviour
     {
 		// Decrement the player's health by amount.
         health -= amount;
-		//suwakBateria.value = health;
+		suwakBateria.value = health;
 
 
     }
