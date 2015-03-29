@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class DoneSceneFadeInOut : MonoBehaviour
 {
 	public float fadeSpeed = 1.5f;			// Speed that the screen fades to and from black.
-	
+	public Text iloscIteracji;
 	
 	private bool sceneStarting = true;		// Whether or not the scene is still fading in.
 	
@@ -66,8 +67,11 @@ public class DoneSceneFadeInOut : MonoBehaviour
 		FadeToBlack();
 		
 		// If the screen is almost black...
-		if(guiTexture.color.a >= 0.95f)
+		if (guiTexture.color.a >= 0.95f) {
+			Gra.iloscIteracji++;
 			// ... reload the level.
-			Application.LoadLevel(0);
+			Application.LoadLevel (0);
+
+		}
 	}
 }

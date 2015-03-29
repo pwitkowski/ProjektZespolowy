@@ -2,14 +2,17 @@
 using System.Collections;
 using UnityEngine.UI;
 
-public class Wskazniki : MonoBehaviour{ 
-	 
-	public Text napisIloscIteracji;
-	public Slider suwakCzas;
-	public Slider suwakBateria;
-	public Slider suwakNaprawa;
+public class Wskazniki : MonoBehaviour {
 
-	public void ustawSuwakBateri(int wartosc){
-		suwakBateria.value = wartosc;
+	public Text napisIloscIteracji;
+
+	// Use this for initialization
+	void Start () {
+		napisIloscIteracji.text = ""+Gra.iloscIteracji;
+	}
+	
+	// Update is called once per frame
+	void Update () {
+	
 	}
 }
