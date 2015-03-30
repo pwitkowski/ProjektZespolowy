@@ -17,7 +17,6 @@ public class DonePlayerHealth : MonoBehaviour
 	private float timer;								// A timer for counting to the reset of the level once the player is dead.
 	private bool playerDead;							// A bool to show if the player is dead or not.
 	private static int iloscIteracji;
-	private bool restart = true;
 
 	void Awake ()
 	{
