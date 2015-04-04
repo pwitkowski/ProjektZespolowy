@@ -5,12 +5,17 @@ using UnityEngine.UI;
 public static class Gra 
 {
 	public static int iloscIteracji = 1;
-	public static float iloscCzasuWSekundach = 600;
+	public static float iloscCzasuWSekundach = 600f;
 	public static float szybkoscRozladowaniaBaterii = 0.02f;
-	public static float czas;
-	public static float bateria;
-	public static float naprawa;
+	public static float czas = 600f;
+	public static float bateria = 100f;
+	public static float naprawa = 100f;
 
+	//zapamietujemy wartoci poczatkowe. Potrzebne przy restarcie.
+	public static float czasPoczatkowy = 600f; //podajemy w sekundach
+	public static float bateriaPoczatkowa = 100;
+	public static float naprawaPoczatkowa = 100;
+	
 	public static bool pauza = false;
 
 	public static void RestartGame(){

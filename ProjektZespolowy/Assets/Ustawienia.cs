@@ -52,6 +52,10 @@ public class Ustawienia : MonoBehaviour {
 		Gra.bateria = suwakBateria.value;
 		Gra.naprawa = suwakNaprawa.value;
 
+		Gra.czasPoczatkowy = Gra.czas;
+		Gra.bateriaPoczatkowa = Gra.bateria;
+		Gra.naprawaPoczatkowa = Gra.naprawa;
+
 		Gra.ResumeGame();
 		Gra.RestartGame();
 	}

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System;
 
 public class Wskazniki : MonoBehaviour {
 	
@@ -12,46 +13,41 @@ public class Wskazniki : MonoBehaviour {
 	public Slider suwakNaprawy;
 	public Image kolorSuwakaNaprawy;
 
-	public float czas; //podajemy w sekundach
-	public float bateria;
-	public float naprawa;
-	public float szybkoscUtratyBateri;
-
-	private float czasPoczatkowy; //zapamiętujemy żeby przeliczyć na %
-
 	// Use this for initialization
 	void Start () {
-		czasPoczatkowy = czas;
 		napisIloscIteracji.text = ""+Gra.iloscIteracji;
 		suwakCzasu.value = DajIloscCzasuWPrzeliczeniuNaProcent();
-		suwakBateri.value = bateria;
-		Gra.naprawa = naprawa;
-		suwakNaprawy.value = Gra.naprawa;
+		suwakBateri.value = Gra.bateriaPoczatkowa;
+		suwakNaprawy.value = Gra.naprawaPoczatkowa;
+
+		Gra.czas = Gra.czasPoczatkowy;
+		Gra.bateria = Gra.bateriaPoczatkowa;
+		Gra.naprawa = Gra.naprawaPoczatkowa;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (!Gra.pauza) {
-			czas -= Time.deltaTime;
-			bateria -= szybkoscUtratyBateri;
+			Gra.czas -= Time.deltaTime;
+			Gra.bateria -= Gra.szybkoscRozladowaniaBaterii;
 
-			if (czas > 0) {
-				suwakCzasu.value = DajIloscCzasuWPrzeliczeniuNaProcent ();
+			if (Gra.czas > 0) {
+				suwakCzasu.value = DajIloscCzasuWPrzeliczeniuNaProcent();
 			}
 
-			if (bateria > 0) {
-				suwakBateri.value = bateria; 
+			if (Gra.bateria > 0) {
+				suwakBateri.value = Gra.bateria; 
 			}
 
 			if (Gra.naprawa > 0) {
 				suwakNaprawy.value = Gra.naprawa;
 			}	
 
-			if (czas <= 0 || bateria <= 0 || Gra.naprawa <= 0) {
+			UstawKolorySuwakow ();
+			
+			if (Gra.czas <= 0 || Gra.bateria <= 0 || Gra.naprawa <= 0) {
 				Gra.RestartGame();
 			}
-
-			UstawKolorySuwakow ();
 		}
 	}
 
@@ -72,6 +68,6 @@ public class Wskazniki : MonoBehaviour {
 	}
 
 	float DajIloscCzasuWPrzeliczeniuNaProcent(){
-		return (100 * czas) / czasPoczatkowy;
+		return (float) Math.Round((100 * Gra.czas) / Gra.iloscCzasuWSekundach,1);
 	}
 }
