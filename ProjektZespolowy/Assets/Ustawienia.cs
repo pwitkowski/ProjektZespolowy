@@ -6,8 +6,8 @@ public class Ustawienia : MonoBehaviour {
 	
 	public GameObject panelUstawienia;
 
-	public Text iloscCzasuWsekundach;
-	public Text szybkoscRozladowaniaBaterii;
+	public InputField iloscCzasuWsekundach;
+	public InputField szybkoscRozladowaniaBaterii;
 	public Text napisCzas;
 	public Text napisBateria;
 	public Text napisNaprawa;
@@ -32,8 +32,6 @@ public class Ustawienia : MonoBehaviour {
 		}
 
 		if (pokazUstawienia) {
-			iloscCzasuWsekundach.text = ""+Gra.iloscCzasuWSekundach;
-			szybkoscRozladowaniaBaterii.text = ""+Gra.szybkoscRozladowaniaBaterii;
 			napisCzas.text = suwakCzas.value.ToString ();
 			napisBateria.text = suwakBateria.value.ToString ();
 			napisNaprawa.text = suwakNaprawa.value.ToString ();
