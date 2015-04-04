@@ -15,6 +15,8 @@ public class Ustawienia : MonoBehaviour {
 	public Slider suwakCzas;
 	public Slider suwakBateria;
 	public Slider suwakNaprawa;
+
+	public Button restart;
 	
 	private bool pokazUstawienia = false;
 
@@ -23,12 +25,16 @@ public class Ustawienia : MonoBehaviour {
 
 		iloscCzasuWsekundach.text = ""+Gra.iloscCzasuWSekundach;
 		szybkoscRozladowaniaBaterii.text = ""+Gra.szybkoscRozladowaniaBaterii;
+	
+		restart.onClick.AddListener (delegate { WczytajNoweUstawienia(); });
 	}
 	
 	void Update() {
 		if (Input.GetKeyDown(KeyCode.Escape)) {
 			pokazUstawienia = !pokazUstawienia;
 			panelUstawienia.SetActive(pokazUstawienia);
+			if(pokazUstawienia) Gra.PauseGame();
+			else Gra.ResumeGame();
 		}
 
 		if (pokazUstawienia) {
@@ -36,5 +42,17 @@ public class Ustawienia : MonoBehaviour {
 			napisBateria.text = suwakBateria.value.ToString ();
 			napisNaprawa.text = suwakNaprawa.value.ToString ();
 		}
+	}
+
+	public void WczytajNoweUstawienia(){
+		Gra.iloscIteracji = 0;
+		Gra.iloscCzasuWSekundach = int.Parse(iloscCzasuWsekundach.text.ToString ());
+		Gra.szybkoscRozladowaniaBaterii = float.Parse(szybkoscRozladowaniaBaterii.text.ToString());
+		Gra.czas = Gra.iloscCzasuWSekundach * (suwakCzas.value / 100); 
+		Gra.bateria = suwakBateria.value;
+		Gra.naprawa = suwakNaprawa.value;
+
+		Gra.ResumeGame();
+		Gra.RestartGame();
 	}
 }

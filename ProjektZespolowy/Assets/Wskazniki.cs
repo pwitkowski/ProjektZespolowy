@@ -31,27 +31,28 @@ public class Wskazniki : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		czas -= Time.deltaTime;
-		bateria -= szybkoscUtratyBateri;
+		if (!Gra.pauza) {
+			czas -= Time.deltaTime;
+			bateria -= szybkoscUtratyBateri;
 
-		if (czas > 0) {
-			suwakCzasu.value = DajIloscCzasuWPrzeliczeniuNaProcent();
+			if (czas > 0) {
+				suwakCzasu.value = DajIloscCzasuWPrzeliczeniuNaProcent ();
+			}
+
+			if (bateria > 0) {
+				suwakBateri.value = bateria; 
+			}
+
+			if (Gra.naprawa > 0) {
+				suwakNaprawy.value = Gra.naprawa;
+			}	
+
+			if (czas <= 0 || bateria <= 0 || Gra.naprawa <= 0) {
+				Gra.RestartGame();
+			}
+
+			UstawKolorySuwakow ();
 		}
-
-		if(bateria > 0){
-			suwakBateri.value = bateria; 
-		}
-
-		if (Gra.naprawa > 0) {
-			suwakNaprawy.value = Gra.naprawa;
-		}	
-
-		if(czas <= 0 || bateria <= 0 || Gra.naprawa <= 0){
-			Gra.iloscIteracji++;
-			Application.LoadLevel (0);
-		}
-
-		UstawKolorySuwakow();
 	}
 
 	void UstawKolorySuwakow(){
