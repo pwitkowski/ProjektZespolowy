@@ -9,38 +9,42 @@ public class Wskazniki : MonoBehaviour {
 	public Slider suwakBateri;
 	public Slider suwakNaprawy;
 
-	public float licznikCzasu = 50f;
-	public float bateria = 100;
-	public float naprawa =100;
-	public float szybkoscUtratyBateri = 0.02f;
+	public float czas; //podajemy w sekundach
+	public float bateria;
+	public float naprawa;
+	public float szybkoscUtratyBateri;
 
-	private float czas;
+	private float czasPoczatkowy; //zapamiętujemy żeby przeliczyć na %
 
 	// Use this for initialization
 	void Start () {
-		czas = licznikCzasu;
+		czasPoczatkowy = czas;
 		napisIloscIteracji.text = ""+Gra.iloscIteracji;
-		suwakCzasu.value = licznikCzasu;
+		suwakCzasu.value = DajIloscCzasuWPrzeliczeniuNaProcent();
 		suwakBateri.value = bateria;
 		suwakNaprawy.value = naprawa;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		licznikCzasu -= Time.deltaTime;
+		czas -= Time.deltaTime;
 		bateria -= szybkoscUtratyBateri;
 
-		if (licznikCzasu > 0) {
-			suwakCzasu.value = (100 * licznikCzasu) / czas;
+		if (czas > 0) {
+			suwakCzasu.value = DajIloscCzasuWPrzeliczeniuNaProcent();
 		}
 
 		if(bateria > 0){
 			suwakBateri.value = bateria; 
 		}
 
-		if(licznikCzasu <= 0 || bateria <= 0){
+		if(czas <= 0 || bateria <= 0){
 			Gra.iloscIteracji++;
 			Application.LoadLevel (0);
 		}
+	}
+
+	float DajIloscCzasuWPrzeliczeniuNaProcent(){
+		return (100 * czas) / czasPoczatkowy;
 	}
 }
