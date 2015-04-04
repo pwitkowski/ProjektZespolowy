@@ -25,7 +25,8 @@ public class Wskazniki : MonoBehaviour {
 		napisIloscIteracji.text = ""+Gra.iloscIteracji;
 		suwakCzasu.value = DajIloscCzasuWPrzeliczeniuNaProcent();
 		suwakBateri.value = bateria;
-		suwakNaprawy.value = naprawa;
+		Gra.naprawa = naprawa;
+		suwakNaprawy.value = Gra.naprawa;
 	}
 	
 	// Update is called once per frame
@@ -41,7 +42,11 @@ public class Wskazniki : MonoBehaviour {
 			suwakBateri.value = bateria; 
 		}
 
-		if(czas <= 0 || bateria <= 0){
+		if (Gra.naprawa > 0) {
+			suwakNaprawy.value = Gra.naprawa;
+		}	
+
+		if(czas <= 0 || bateria <= 0 || Gra.naprawa <= 0){
 			Gra.iloscIteracji++;
 			Application.LoadLevel (0);
 		}
