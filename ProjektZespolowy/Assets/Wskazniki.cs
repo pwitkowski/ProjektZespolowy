@@ -6,8 +6,11 @@ public class Wskazniki : MonoBehaviour {
 	
 	public Text napisIloscIteracji;
 	public Slider suwakCzasu;
+	public Image kolorSuwakaCzasu;
 	public Slider suwakBateri;
+	public Image kolorSuwakaBaterii;
 	public Slider suwakNaprawy;
+	public Image kolorSuwakaNaprawy;
 
 	public float czas; //podajemy w sekundach
 	public float bateria;
@@ -41,6 +44,24 @@ public class Wskazniki : MonoBehaviour {
 		if(czas <= 0 || bateria <= 0){
 			Gra.iloscIteracji++;
 			Application.LoadLevel (0);
+		}
+
+		UstawKolorySuwakow();
+	}
+
+	void UstawKolorySuwakow(){
+		kolorSuwakaCzasu.color = DajKolorSukawa(suwakCzasu);
+		kolorSuwakaBaterii.color = DajKolorSukawa(suwakBateri);
+		kolorSuwakaNaprawy.color = DajKolorSukawa(suwakNaprawy);
+	}
+
+	Color DajKolorSukawa(Slider suwak){
+		if (suwak.value <= 33) {
+			return Color.red;
+		} else if (suwak.value >= 33 && suwak.value <= 66) {
+			return Color.yellow;
+		} else {
+			return Color.green;
 		}
 	}
 
