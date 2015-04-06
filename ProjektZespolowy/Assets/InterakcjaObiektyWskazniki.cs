@@ -24,6 +24,7 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 			case "LadowanieBaterii":
 				if (Gra.bateria < 100) {
 					Gra.bateria += (100 - Gra.bateria);
+					Destroy(gameObject);
 				}
 				break;
 			}
