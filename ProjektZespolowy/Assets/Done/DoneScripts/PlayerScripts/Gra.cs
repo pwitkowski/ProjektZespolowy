@@ -13,8 +13,8 @@ public static class Gra
 
 	//zapamietujemy wartoci poczatkowe. Potrzebne przy restarcie.
 	public static float czasPoczatkowy = 600f; //podajemy w sekundach
-	public static float bateriaPoczatkowa = 100;
-	public static float naprawaPoczatkowa = 100;
+	public static float bateriaPoczatkowa = 100f;
+	public static float naprawaPoczatkowa = 100f;
 	
 	public static bool pauza = false;
 

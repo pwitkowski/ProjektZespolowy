@@ -5,15 +5,17 @@ using System.Collections;
 public class InterakcjaObiektyWskazniki : MonoBehaviour
 {
 	private GameObject player;
+	private GameObject cialoRobota;
 
 	void Awake ()
 	{
 		player = GameObject.FindGameObjectWithTag(DoneTags.player);
+		cialoRobota =  GameObject.FindGameObjectWithTag(DoneTags.cialoRobota);
 	}
 		
 	void OnTriggerEnter (Collider other)
 	{
-		if (other.gameObject == player) {
+		if (other.gameObject == cialoRobota) {
 			print ("Obiekt " + collider.name);
 			switch (colliderNazwaZawiera (collider.name)) {
 			case "lasery":

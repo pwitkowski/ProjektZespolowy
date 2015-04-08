@@ -20,7 +20,7 @@ public class DoneDoorAnimation : MonoBehaviour
 		// Setting up the references.
 		anim = GetComponent<Animator>();
 		hash = GameObject.FindGameObjectWithTag(DoneTags.gameController).GetComponent<DoneHashIDs>();
-		player = GameObject.FindGameObjectWithTag(DoneTags.player);
+		player = GameObject.FindGameObjectWithTag(DoneTags.cialoRobota);
 		playerInventory = player.GetComponent<DonePlayerInventory>();
 	}
 	

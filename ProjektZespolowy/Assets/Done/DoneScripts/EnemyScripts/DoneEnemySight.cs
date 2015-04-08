@@ -48,12 +48,12 @@ public class DoneEnemySight : MonoBehaviour
 		previousSighting = lastPlayerSighting.position;
 		
 		// If the player is alive...
-		if(playerHealth.health > 0f)
+		//if(playerHealth.health > 0f)
 			// ... set the animator parameter to whether the player is in sight or not.
-			anim.SetBool(hash.playerInSightBool, playerInSight);
-		else
+			//anim.SetBool(hash.playerInSightBool, playerInSight);
+		//else
 			// ... set the animator parameter to false.
-			anim.SetBool(hash.playerInSightBool, false);
+			//anim.SetBool(hash.playerInSightBool, false);
 	}
 	
 
