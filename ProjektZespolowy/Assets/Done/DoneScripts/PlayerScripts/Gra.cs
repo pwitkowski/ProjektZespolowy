@@ -15,6 +15,8 @@ public static class Gra
 	public static float czasPoczatkowy = 600f; //podajemy w sekundach
 	public static float bateriaPoczatkowa = 100f;
 	public static float naprawaPoczatkowa = 100f;
+
+	public static int OstatniWayPointIndex = 0;
 	
 	public static bool pauza = false;
 

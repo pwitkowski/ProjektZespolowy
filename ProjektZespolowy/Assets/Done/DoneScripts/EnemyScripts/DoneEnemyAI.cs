@@ -95,7 +95,10 @@ public class DoneEnemyAI : MonoBehaviour
 	{
 		// Set an appropriate speed for the NavMeshAgent.
 		nav.speed = patrolSpeed;
-		
+
+		if(Gra.OstatniWayPointIndex > 0)
+			wayPointIndex = Gra.OstatniWayPointIndex;
+
 		// If near the next waypoint or there is no destination...
 		if(nav.destination == lastPlayerSighting.resetPosition || nav.remainingDistance < nav.stoppingDistance)
 		{
@@ -118,8 +121,11 @@ public class DoneEnemyAI : MonoBehaviour
 		else
 			// If not near a destination, reset the timer.
 			patrolTimer = 0;
-		
+
+		//print ("Waypoint " + wayPointIndex);
+
 		// Set the destination to the patrolWayPoint.
 		nav.destination = patrolWayPoints[wayPointIndex].position;
+		Gra.OstatniWayPointIndex = wayPointIndex;
 	}
 }
