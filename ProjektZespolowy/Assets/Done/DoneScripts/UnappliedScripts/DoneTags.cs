@@ -12,4 +12,6 @@ public class DoneTags : MonoBehaviour
 	public const string fader = "Fader";
 	public const string enemy = "Enemy";
 	public const string cialoRobota = "CialoRobota";
+	public const string poleWidzenia = "PoleWidzenia";
+
 }

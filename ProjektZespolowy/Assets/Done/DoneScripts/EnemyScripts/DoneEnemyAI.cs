@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class DoneEnemyAI : MonoBehaviour
 {
@@ -7,9 +8,8 @@ public class DoneEnemyAI : MonoBehaviour
 	public float chaseSpeed = 5f;							// The nav mesh agent's speed when chasing.
 	public float chaseWaitTime = 5f;						// The amount of time to wait when the last sighting is reached.
 	public float patrolWaitTime = 1f;						// The amount of time to wait when the patrol way point is reached.
-	public Transform[] patrolWayPoints;						// An array of transforms for the patrol route.
-	
-	
+	//public Transform[] patrolWayPoints;						// An array of transforms for the patrol route.
+
 	private DoneEnemySight enemySight;						// Reference to the EnemySight script.
 	private NavMeshAgent nav;								// Reference to the nav mesh agent.
 	private Transform player;								// Reference to the player's transform.
@@ -18,8 +18,9 @@ public class DoneEnemyAI : MonoBehaviour
 	private float chaseTimer;								// A timer for the chaseWaitTime.
 	private float patrolTimer;								// A timer for the patrolWaitTime.
 	private int wayPointIndex;								// A counter for the way point array.
-	
-	
+	private Vector3 punkt;
+	private List<string> listaPunktowDoWyboru = new List<string>();
+
 	void Awake ()
 	{
 		// Setting up the references.
@@ -28,6 +29,7 @@ public class DoneEnemyAI : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag(DoneTags.player).transform;
 		playerHealth = player.GetComponent<DonePlayerHealth>();
 		lastPlayerSighting = GameObject.FindGameObjectWithTag(DoneTags.gameController).GetComponent<DoneLastPlayerSighting>();
+		punkt = new Vector3();
 	}
 	
 	
@@ -93,39 +95,30 @@ public class DoneEnemyAI : MonoBehaviour
 	
 	void Patrolling ()
 	{
-		// Set an appropriate speed for the NavMeshAgent.
+		//ustawiam szybkosc
 		nav.speed = patrolSpeed;
+		if (nav.destination == punkt || nav.remainingDistance < nav.stoppingDistance) {
+			//biore pierwszy nieodwiedzony punkt z tablicy
+			listaPunktowDoWyboru = new List<string> ();
+			foreach (DictionaryEntry p in Gra.tablicaPunktow) {
+				if (!Gra.listaPunktowOdwiedzonych.Contains (p.Key.ToString ())) {
+					listaPunktowDoWyboru.Add (p.Key.ToString ());
+					//print("Idę do punktu: "+p.Key.ToString());
+					//punkt = (Vector3) p.Value;
+					//break;
+				}
+			}
 
-		if(Gra.OstatniWayPointIndex > 0)
-			wayPointIndex = Gra.OstatniWayPointIndex;
-
-		// If near the next waypoint or there is no destination...
-		if(nav.destination == lastPlayerSighting.resetPosition || nav.remainingDistance < nav.stoppingDistance)
-		{
-			// ... increment the timer.
-			patrolTimer += Time.deltaTime;
-			
-			// If the timer exceeds the wait time...
-			if(patrolTimer >= patrolWaitTime)
-			{
-				// ... increment the wayPointIndex.
-				if(wayPointIndex == patrolWayPoints.Length - 1)
-					wayPointIndex = 0;
-				else
-					wayPointIndex++;
-				
-				// Reset the timer.
-				patrolTimer = 0;
+			//wybieram losowy punkt
+			if (listaPunktowDoWyboru.Count > 0) {
+				int index = Random.Range (0, listaPunktowDoWyboru.Count);
+				string nazwaPunktu = listaPunktowDoWyboru [index];
+				print ("Idę do punktu: " + nazwaPunktu);
+				punkt = (Vector3)Gra.tablicaPunktow [nazwaPunktu];
 			}
 		}
-		else
-			// If not near a destination, reset the timer.
-			patrolTimer = 0;
 
-		//print ("Waypoint " + wayPointIndex);
-
-		// Set the destination to the patrolWayPoint.
-		nav.destination = patrolWayPoints[wayPointIndex].position;
-		Gra.OstatniWayPointIndex = wayPointIndex;
+		//ide do punktu na mapie
+		nav.destination = punkt;
 	}
 }

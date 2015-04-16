@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public static class Gra 
 {
@@ -17,6 +18,11 @@ public static class Gra
 	public static float naprawaPoczatkowa = 100f;
 
 	public static int OstatniWayPointIndex = 0;
+
+	//public static Graph<string> graf = new Graph<string>();
+	public static Hashtable tablicaPunktow = new Hashtable();
+	public static Hashtable tablicaArtefaktow = new Hashtable();//TODO zapisywać nazwe i punkt artefaktu
+	public static List<string> listaPunktowOdwiedzonych = new List<string>();
 	
 	public static bool pauza = false;
 
