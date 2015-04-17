@@ -21,8 +21,8 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 			print ("Ciało robota dotyka: " + collider.name);
 			switch (colliderNazwaZawiera (collider.name)) {
 				case "lasery":
-					Gra.naprawa = 0;
-					Gra.bateria = 0;
+					Gra.naprawa -= 50;
+					Gra.bateria -= 10;
 					//TODO dodać do navmesh jako przeszkoda
 					break;
 				case "LadowanieBaterii":
