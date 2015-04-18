@@ -22,9 +22,14 @@ public static class Gra
 	//public static Graph<string> graf = new Graph<string>();
 	public static Hashtable tablicaPunktow = new Hashtable();
 	public static Hashtable tablicaArtefaktow = new Hashtable();//TODO zapisywać nazwe i punkt artefaktu
-	public static List<string> listaPunktowOdwiedzonych = new List<string>();
+	public static List<string >listaPunktowOdwiedzonych = new List<string>();
+	public static Queue<string> kolejkaKomunikatow = new Queue<string>();
 	
 	public static bool pauza = false;
+
+	public static void WyswietlKomunikatWChmurze(string komunikat){
+		kolejkaKomunikatow.Enqueue (komunikat);
+	}
 
 	public static void RestartGame(){
 		iloscIteracji++;
