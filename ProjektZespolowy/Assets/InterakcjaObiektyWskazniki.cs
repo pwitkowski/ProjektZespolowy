@@ -52,6 +52,13 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 						Gra.tablicaPunktow.Add(collider.name, collider.transform.position);
 					}
 					break;
+				case "bateria":
+					//dodaje baterie do listy artefaktów
+					if(!Gra.tablicaArtefaktow.ContainsKey(collider.name)){
+						print("Dodaje do listy artefaktów: "+collider.name);
+						Gra.tablicaArtefaktow.Add(collider.name, collider.transform.position);
+					}
+					break;
 			}
 		}
 	}
