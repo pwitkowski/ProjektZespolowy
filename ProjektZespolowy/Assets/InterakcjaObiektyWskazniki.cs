@@ -7,6 +7,8 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 	//private GameObject player;
 	private GameObject cialoRobota;
 	private GameObject poleWidzenia;
+	private float uszkodzeniaBaterii = 10f;
+	private float uszkodzeniaNaprawy = 50f;
 
 	void Awake ()
 	{
@@ -21,13 +23,17 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 			print ("Ciało robota dotyka: " + collider.name);
 			switch (colliderNazwaZawiera (collider.name)) {
 				case "lasery":
-					Gra.naprawa -= 50;
-					Gra.bateria -= 10;
+					Gra.naprawa -= uszkodzeniaNaprawy;
+					Gra.bateria -= uszkodzeniaBaterii;
+
+					Gra.WyswietlKomunikatWChmurze("Bateria: -" + uszkodzeniaBaterii + ", Naprawa -" + uszkodzeniaNaprawy);
 					//TODO dodać do navmesh jako przeszkoda
 					break;
 				case "LadowanieBaterii":
 					if (Gra.bateria < 100) {
-						Gra.bateria += (100 - Gra.bateria);
+						float doladowanie  =(100 - Gra.bateria);
+						Gra.bateria += doladowanie;
+						Gra.WyswietlKomunikatWChmurze("Bateria: +" + doladowanie);
 						//Destroy(gameObject);
 						gameObject.active = false;
 					}
