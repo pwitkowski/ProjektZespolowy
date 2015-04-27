@@ -23,7 +23,7 @@ public class chmura : MonoBehaviour {
 		try{
 			//biore pierwszy komunikat z kolejki
 			komunikat = Gra.kolejkaKomunikatow.Peek();
-			print ("Komunikat: " + komunikat);
+			//print ("Komunikat: " + komunikat);
 		}catch(InvalidOperationException e){
 			print("Kolejka komunikatów jest pusta");
 		}

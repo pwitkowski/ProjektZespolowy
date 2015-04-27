@@ -113,7 +113,7 @@ public class DoneEnemyAI : MonoBehaviour
 			if (listaPunktowDoWyboru.Count > 0) {
 				int index = Random.Range (0, listaPunktowDoWyboru.Count);
 				string nazwaPunktu = listaPunktowDoWyboru [index];
-				print ("Idę do punktu: " + nazwaPunktu);
+				//print ("Idę do punktu: " + nazwaPunktu);
 				Gra.WyswietlKomunikatWChmurze("Ide do punktu: " + nazwaPunktu);
 				punkt = (Vector3)Gra.tablicaPunktow [nazwaPunktu];
 			}

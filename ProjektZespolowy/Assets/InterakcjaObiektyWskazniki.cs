@@ -9,6 +9,7 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 	private GameObject poleWidzenia;
 	private float uszkodzeniaBaterii = 10f;
 	private float uszkodzeniaNaprawy = 50f;
+	private float doladowanieCzasu = 200f;
 
 	void Awake ()
 	{
@@ -29,7 +30,7 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 					Gra.WyswietlKomunikatWChmurze("Bateria: -" + uszkodzeniaBaterii + ", Naprawa -" + uszkodzeniaNaprawy);
 					//TODO dodać do navmesh jako przeszkoda
 					break;
-				case "LadowanieBaterii":
+				case "bateria":
 					if (Gra.bateria < 100) {
 						float doladowanie  =(100 - Gra.bateria);
 						Gra.bateria += doladowanie;
@@ -38,28 +39,70 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 						gameObject.active = false;
 					}
 					break;
-			case "punkt":
-				//zapisuje punkt jako odwiedzony
-				if(!Gra.listaPunktowOdwiedzonych.Contains(collider.name)){
-					print("Odwiedziłem już: "+collider.name);
-					Gra.listaPunktowOdwiedzonych.Add(collider.name);
-				}
-				break;
+				case "bomba":
+					Gra.naprawa -= (uszkodzeniaNaprawy + 40);
+					Gra.bateria -= (uszkodzeniaBaterii + 40);
+					
+					Gra.WyswietlKomunikatWChmurze("Bateria: -" + uszkodzeniaBaterii + ", Naprawa -" + uszkodzeniaNaprawy);
+					gameObject.active = false;
+					break;
+				case "zegar":
+					Gra.czas += doladowanieCzasu;
+					Gra.WyswietlKomunikatWChmurze("Czas +" + doladowanieCzasu);
+					gameObject.active = false;
+					break;
+				case "apteczka":
+					if (Gra.naprawa < 100) {
+						float doladowanieNaprawy  =(100 - Gra.naprawa);
+						Gra.naprawa += doladowanieNaprawy;
+						Gra.WyswietlKomunikatWChmurze("Naprawa: +" + doladowanieNaprawy);
+						//Destroy(gameObject);
+						gameObject.active = false;
+					}			
+					break;
+				case "punkt":
+					//zapisuje punkt jako odwiedzony
+					if(!Gra.listaPunktowOdwiedzonych.Contains(collider.name)){
+						//print("Odwiedziłem już: "+collider.name);
+						Gra.listaPunktowOdwiedzonych.Add(collider.name);
+					}
+					break;
 			}
 		}
 
 		if (other.gameObject == poleWidzenia) {
-			print ("W polu widzenia jest: " + collider.name);
+			//print ("W polu widzenia jest: " + collider.name);
 			switch (colliderNazwaZawiera (collider.name)) {
 				case "punkt":
 					//dodaje waypointa do listy punktow
 					if(!Gra.tablicaPunktow.ContainsKey(collider.name)){
-						print("Dodaje do listy punktów: "+collider.name);
+						//print("Dodaje do listy punktów: "+collider.name);
 						Gra.tablicaPunktow.Add(collider.name, collider.transform.position);
 					}
 					break;
 				case "bateria":
 					//dodaje baterie do listy artefaktów
+					if(!Gra.tablicaArtefaktow.ContainsKey(collider.name)){
+						print("Dodaje do listy artefaktów: "+collider.name);
+						Gra.tablicaArtefaktow.Add(collider.name, collider.transform.position);
+					}
+					break;
+				case "bomba":
+					//dodaje bombe do listy artefaktów
+					if(!Gra.tablicaArtefaktow.ContainsKey(collider.name)){
+						print("Dodaje do listy artefaktów: "+collider.name);
+						Gra.tablicaArtefaktow.Add(collider.name, collider.transform.position);
+					}
+					break;
+				case "zegar":
+					//dodaje zegar do listy artefaktów
+					if(!Gra.tablicaArtefaktow.ContainsKey(collider.name)){
+						print("Dodaje do listy artefaktów: "+collider.name);
+						Gra.tablicaArtefaktow.Add(collider.name, collider.transform.position);
+					}
+					break;
+				case "apteczka":
+					//dodaje apteczke do listy artefaktów
 					if(!Gra.tablicaArtefaktow.ContainsKey(collider.name)){
 						print("Dodaje do listy artefaktów: "+collider.name);
 						Gra.tablicaArtefaktow.Add(collider.name, collider.transform.position);
