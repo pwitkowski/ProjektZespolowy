@@ -117,9 +117,24 @@ public class DoneEnemyAI : MonoBehaviour
 				Gra.WyswietlKomunikatWChmurze("Ide do punktu: " + nazwaPunktu);
 				punkt = (Vector3)Gra.tablicaPunktow [nazwaPunktu];
 			}
+
+			if (Gra.bateria <= 30f) punkt = dajPozycjeBaterii (punkt);
 		}
 
 		//ide do punktu na mapie
 		nav.destination = punkt;
+	}
+
+	Vector3 dajPozycjeBaterii(Vector3 punktDoKtoregoIde){
+		if (Gra.tablicaArtefaktow.Contains ("bateria")) {
+			print ("Ide podladowac baterie");
+			Gra.WyswietlKomunikatWChmurze ("Ide podladowac baterie");
+			//zwracam pozycje baterii jeśli ją znam
+			return (Vector3) Gra.tablicaArtefaktow["bateria"];
+		} else {
+			print("Nie wiem gdzie jest bateria. Szukam dalej ...");
+			Gra.WyswietlKomunikatWChmurze ("Podladowalbym baterie ale nie wiem gdzie jest ...");
+			return punktDoKtoregoIde;
+		}
 	}
 }
