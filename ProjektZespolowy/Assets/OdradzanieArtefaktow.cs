@@ -4,6 +4,9 @@ using System.Collections;
 public class OdradzanieArtefaktow : MonoBehaviour {
 	
 	public GameObject bateria;
+	public GameObject bomba;
+	public GameObject zegar;
+	public GameObject apteczka;
 	public float czasOdrodzenia = 5f; //ustawiany w unity
 	
 	void Start ()
@@ -17,5 +20,8 @@ public class OdradzanieArtefaktow : MonoBehaviour {
 	{	
 		//jeśli artefakt nie jest aktywny to odradzam go
 		if (bateria.active == false) bateria.active = true;
+		if (bomba.active == false) bomba.active = true;
+		if (zegar.active == false) zegar.active = true;
+		if (apteczka.active == false) apteczka.active = true;
 	}
 }
