@@ -118,6 +118,7 @@ public class DoneEnemyAI : MonoBehaviour
 				punkt = (Vector3)Gra.tablicaPunktow [nazwaPunktu];
 			}
 
+			//TODO dodać priorytetyzacje potrzeb
 			if (Gra.bateria <= 30f) punkt = dajPozycjeBaterii (punkt);
 		}
 
@@ -134,6 +135,32 @@ public class DoneEnemyAI : MonoBehaviour
 		} else {
 			print("Nie wiem gdzie jest bateria. Szukam dalej ...");
 			Gra.WyswietlKomunikatWChmurze ("Podladowalbym baterie ale nie wiem gdzie jest ...");
+			return punktDoKtoregoIde;
+		}
+	}
+
+	Vector3 dajPozycjeZegara(Vector3 punktDoKtoregoIde){
+		if (Gra.tablicaArtefaktow.Contains ("zegar")) {
+			print ("Ide zyskac troche czasu");
+			Gra.WyswietlKomunikatWChmurze ("Ide zyskac troche czasu");
+			//zwracam pozycje zegara jeśli ją znam
+			return (Vector3) Gra.tablicaArtefaktow["zegar"];
+		} else {
+			print("Nie wiem gdzie jest zegar. Szukam dalej ...");
+			Gra.WyswietlKomunikatWChmurze ("Zdobylbym troche wiecej czasu ale nie wiem jak ...");
+			return punktDoKtoregoIde;
+		}
+	}
+
+	Vector3 dajPozycjeApteczki(Vector3 punktDoKtoregoIde){
+		if (Gra.tablicaArtefaktow.Contains ("apteczka")) {
+			print ("Ide podreperowac uklady scalone");
+			Gra.WyswietlKomunikatWChmurze ("Ide podladowac uklady scalone");
+			//zwracam pozycje apteczki jeśli ją znam
+			return (Vector3) Gra.tablicaArtefaktow["apteczka"];
+		} else {
+			print("Nie wiem gdzie jest apteczka. Szukam dalej ...");
+			Gra.WyswietlKomunikatWChmurze ("Podreperowalbym sie ale nie wiem jak ...");
 			return punktDoKtoregoIde;
 		}
 	}
