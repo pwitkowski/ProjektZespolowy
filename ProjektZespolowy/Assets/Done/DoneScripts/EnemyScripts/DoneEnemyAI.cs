@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class DoneEnemyAI : MonoBehaviour
 {
@@ -92,76 +93,143 @@ public class DoneEnemyAI : MonoBehaviour
 			chaseTimer = 0f;
 	}
 
+	void podejmowanieDecyzji(){
+		string decyzja = Gra.kolejkaPriorytetowa.Peek();
+		if (decyzja != null && decyzja.Length > 0) {
+			print ("Decyzja z kolejki: " + decyzja);
+			switch(decyzja){
+				case "wydostanieSieZWiezienia":
+					//przechodze kolejne waypointy
+					idzDoKolejnegoWaypointa();
+					break;
+				case "czas":
+					//ide zdobyc troche czasu
+					idzZdobycTrocheCzasu();
+					break;
+				case "bateria":
+					//ide podładować baterie
+					idzPodladowacBaterie();
+					break;
+				case "naprawa" :
+					//ide się podreperować
+					idzPodreperowacSie();
+					break;
+				case "poznawanieArtefaktow":
+					//idzie poznawać nowe artefakty
+					idzPoznawacNoweArtefakty();
+					break;
+			}
+		} else {
+			//usuwam z kolejkaPriorytetowa pierwszy nullowy element i dodaje nowy z najwyższym priorytetem z tablicaPriorytetow
+			print("Czyszcze kolejke priorytetowa i dodane nowy z najwyższym priorytetem z tablicaPriorytetow");
+			Gra.kolejkaPriorytetowa.Dequeue();
+			Gra.kolejkaPriorytetowa.Enqueue(dajNajwiekszyPriorytetZeSlownika());
+			podejmowanieDecyzji();
+		}
+	}
+
+	void idzDoKolejnegoWaypointa(){
+		print("Ide do kolejnego waypointa");
+		//biore pierwszy nieodwiedzony punkt z tablicy
+		listaPunktowDoWyboru = new List<string> ();
+		foreach (DictionaryEntry p in Gra.tablicaPunktow) {
+			if (!Gra.listaPunktowOdwiedzonych.Contains (p.Key.ToString ())) {
+				listaPunktowDoWyboru.Add (p.Key.ToString ());
+				//print("Idę do punktu: "+p.Key.ToString());
+				//punkt = (Vector3) p.Value;
+				//break;
+			}
+		}
+		
+		//wybieram losowy punkt
+		if (listaPunktowDoWyboru.Count > 0) {
+			int index = Random.Range (0, listaPunktowDoWyboru.Count);
+			string nazwaPunktu = listaPunktowDoWyboru [index];
+			//print ("Idę do punktu: " + nazwaPunktu);
+			Gra.WyswietlKomunikatWChmurze("Ide do punktu: " + nazwaPunktu);
+			punkt = (Vector3)Gra.tablicaPunktow [nazwaPunktu];
+		}
+	}
+
+	void idzZdobycTrocheCzasu(){
+		print("Ide zyskać trochę czasu");
+		//TODO przeliczyc z tablicaArtefaktBol przez jaki artefaky zyska najwiecej czasu
+		if (Gra.tablicaRozpoznanychArtefaktow.Contains ("zegar")) {
+			//print ("Ide zyskac troche czasu");
+			Gra.WyswietlKomunikatWChmurze ("Ide zyskac troche czasu");
+			//zwracam pozycje zegara jeśli ją znam
+			punkt = (Vector3) Gra.tablicaRozpoznanychArtefaktow["zegar"];
+		} else {
+			//print("Nie wiem gdzie jest zegar. Szukam dalej ...");
+			Gra.WyswietlKomunikatWChmurze ("Zdobylbym troche wiecej czasu ale nie wiem jak ...");
+			//Gra.kolejkaPriorytetowa.Dequeue();
+			//Gra.kolejkaPriorytetowa.Enqueue("poznawanieArtefaktow"); //TODO dodać odpowiedni priorytet
+			idzPoznawacNoweArtefakty();
+		}
+	}
+
+	void idzPodladowacBaterie(){
+		print("Ide podladować baterie");
+		//TODO przeliczyc z tablicaArtefaktBol jaki artefaky naładuje najwiecej baterii
+		if (Gra.tablicaRozpoznanychArtefaktow.Contains ("bateria")) {
+			//print ("Ide podladowac baterie");
+			Gra.WyswietlKomunikatWChmurze ("Ide podladowac baterie");
+			//zwracam pozycje baterii jeśli ją znam
+			punkt = (Vector3) Gra.tablicaRozpoznanychArtefaktow["bateria"];
+		} else {
+			//print("Nie wiem gdzie jest bateria. Szukam dalej ...");
+			Gra.WyswietlKomunikatWChmurze ("Podladowalbym baterie ale nie wiem gdzie jest ...");
+			//Gra.kolejkaPriorytetowa.Dequeue();
+			//Gra.kolejkaPriorytetowa.Enqueue("poznawanieArtefaktow"); //TODO dodać odpowiedni priorytet
+			idzPoznawacNoweArtefakty();
+		}
+	}
+
+	void idzPodreperowacSie(){
+		print("Ide podreperowac się");
+		//TODO przeliczyc z tablicaArtefaktBol jaki artefaky najwięcej podreperuje
+		if (Gra.tablicaRozpoznanychArtefaktow.Contains ("apteczka")) {
+			//print ("Ide podreperowac uklady scalone");
+			Gra.WyswietlKomunikatWChmurze ("Ide podladowac uklady scalone");
+			//zwracam pozycje apteczki jeśli ją znam
+			punkt = (Vector3) Gra.tablicaRozpoznanychArtefaktow["apteczka"];
+		} else {
+			//print("Nie wiem gdzie jest apteczka. Szukam dalej ...");
+			Gra.WyswietlKomunikatWChmurze ("Podreperowalbym sie ale nie wiem jak ...");
+			//Gra.kolejkaPriorytetowa.Dequeue();
+			//Gra.kolejkaPriorytetowa.Enqueue("poznawanieArtefaktow"); //TODO dodać odpowiedni priorytet
+			idzPoznawacNoweArtefakty();
+		}
+	}
+
+	void idzPoznawacNoweArtefakty(){
+		print("Ide poznawać artefakty");
+		if (Gra.listaPozycjiZnalezionychArtefaktow.Count > 0) {
+			//jeśli znaleziono jakieś artefakty to ide do losowego z nich
+			int index = Random.Range (0, Gra.listaPozycjiZnalezionychArtefaktow.Count);
+			punkt = Gra.listaPozycjiZnalezionychArtefaktow [index];
+		} else {
+			//Gra.kolejkaPriorytetowa.Dequeue();
+			//Gra.kolejkaPriorytetowa.Enqueue("wydostanieSieZWiezienia"); //TODO dodać odpowiedni priorytet
+			idzDoKolejnegoWaypointa();
+		}
+	}
+
+	string dajNajwiekszyPriorytetZeSlownika(){
+		// print("Najwiekszy priorytet: " + Gra.slownikPriorytetow.Keys.First ());
+		return Gra.slownikPriorytetow.Keys.First();
+	}
 	
-	void Patrolling ()
-	{
+	void Patrolling(){
 		//ustawiam szybkosc
 		nav.speed = patrolSpeed;
-		if (nav.destination == punkt || nav.remainingDistance < nav.stoppingDistance) {
-			//biore pierwszy nieodwiedzony punkt z tablicy
-			listaPunktowDoWyboru = new List<string> ();
-			foreach (DictionaryEntry p in Gra.tablicaPunktow) {
-				if (!Gra.listaPunktowOdwiedzonych.Contains (p.Key.ToString ())) {
-					listaPunktowDoWyboru.Add (p.Key.ToString ());
-					//print("Idę do punktu: "+p.Key.ToString());
-					//punkt = (Vector3) p.Value;
-					//break;
-				}
-			}
 
-			//wybieram losowy punkt
-			if (listaPunktowDoWyboru.Count > 0) {
-				int index = Random.Range (0, listaPunktowDoWyboru.Count);
-				string nazwaPunktu = listaPunktowDoWyboru [index];
-				//print ("Idę do punktu: " + nazwaPunktu);
-				Gra.WyswietlKomunikatWChmurze("Ide do punktu: " + nazwaPunktu);
-				punkt = (Vector3)Gra.tablicaPunktow [nazwaPunktu];
-			}
-
-			//TODO dodać priorytetyzacje potrzeb
-			if (Gra.bateria <= 30f) punkt = dajPozycjeBaterii (punkt);
+		if (nav.destination == punkt || nav.remainingDistance < nav.stoppingDistance){
+			//podejmuje decyzje
+			podejmowanieDecyzji();
 		}
 
 		//ide do punktu na mapie
 		nav.destination = punkt;
-	}
-
-	Vector3 dajPozycjeBaterii(Vector3 punktDoKtoregoIde){
-		if (Gra.tablicaArtefaktow.Contains ("bateria")) {
-			print ("Ide podladowac baterie");
-			Gra.WyswietlKomunikatWChmurze ("Ide podladowac baterie");
-			//zwracam pozycje baterii jeśli ją znam
-			return (Vector3) Gra.tablicaArtefaktow["bateria"];
-		} else {
-			print("Nie wiem gdzie jest bateria. Szukam dalej ...");
-			Gra.WyswietlKomunikatWChmurze ("Podladowalbym baterie ale nie wiem gdzie jest ...");
-			return punktDoKtoregoIde;
-		}
-	}
-
-	Vector3 dajPozycjeZegara(Vector3 punktDoKtoregoIde){
-		if (Gra.tablicaArtefaktow.Contains ("zegar")) {
-			print ("Ide zyskac troche czasu");
-			Gra.WyswietlKomunikatWChmurze ("Ide zyskac troche czasu");
-			//zwracam pozycje zegara jeśli ją znam
-			return (Vector3) Gra.tablicaArtefaktow["zegar"];
-		} else {
-			print("Nie wiem gdzie jest zegar. Szukam dalej ...");
-			Gra.WyswietlKomunikatWChmurze ("Zdobylbym troche wiecej czasu ale nie wiem jak ...");
-			return punktDoKtoregoIde;
-		}
-	}
-
-	Vector3 dajPozycjeApteczki(Vector3 punktDoKtoregoIde){
-		if (Gra.tablicaArtefaktow.Contains ("apteczka")) {
-			print ("Ide podreperowac uklady scalone");
-			Gra.WyswietlKomunikatWChmurze ("Ide podladowac uklady scalone");
-			//zwracam pozycje apteczki jeśli ją znam
-			return (Vector3) Gra.tablicaArtefaktow["apteczka"];
-		} else {
-			print("Nie wiem gdzie jest apteczka. Szukam dalej ...");
-			Gra.WyswietlKomunikatWChmurze ("Podreperowalbym sie ale nie wiem jak ...");
-			return punktDoKtoregoIde;
-		}
 	}
 }

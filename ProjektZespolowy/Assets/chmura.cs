@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using System;
 
-public class chmura : MonoBehaviour {
+public class Chmura : MonoBehaviour {
 
 	public Transform kamera;
 	public GameObject canvasChmurka;
@@ -25,7 +25,7 @@ public class chmura : MonoBehaviour {
 			komunikat = Gra.kolejkaKomunikatow.Peek();
 			//print ("Komunikat: " + komunikat);
 		}catch(InvalidOperationException e){
-			print("Kolejka komunikatów jest pusta");
+			//print("Kolejka komunikatów jest pusta");
 		}
 
 		if (komunikat != null && komunikat.Length > 0) {

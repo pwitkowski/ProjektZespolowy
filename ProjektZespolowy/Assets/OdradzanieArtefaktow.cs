@@ -18,7 +18,7 @@ public class OdradzanieArtefaktow : MonoBehaviour {
 	
 	void Odradzanie ()
 	{	
-		//jeśli artefakt nie jest aktywny to odradzam go
+		//jeśli artefakt nie jest aktywny to aktywuje go
 		if (bateria.active == false) bateria.active = true;
 		if (bomba.active == false) bomba.active = true;
 		if (zegar.active == false) zegar.active = true;
