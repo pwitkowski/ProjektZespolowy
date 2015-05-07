@@ -48,7 +48,7 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 						gameObject.active = false;
 
 						//zdejmuje z kolejki podładowanie baterii
-						Gra.kolejkaPriorytetowa.Dequeue();
+						//Gra.kolejkaPriorytetowa.Dequeue();
 					}
 					break;
 				case "bomba":
@@ -71,7 +71,7 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 					gameObject.active = false;
 
 					//zdejmuje z kolejki zdobycie troche czasu
-					Gra.kolejkaPriorytetowa.Dequeue();
+					//Gra.kolejkaPriorytetowa.Dequeue();
 					break;
 				case "apteczka":
 					if (Gra.wskazniki.naprawa < 100) {
@@ -85,7 +85,7 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 						gameObject.active = false;
 
 						//zdejmuje z kolejki podreperowanie się
-						Gra.kolejkaPriorytetowa.Dequeue();
+						//Gra.kolejkaPriorytetowa.Dequeue();
 					}			
 					break;
 				case "punkt":

@@ -13,6 +13,9 @@ public static class Gra
 	//zapamietujemy wartoci poczatkowe. Potrzebne przy restarcie.
 	public static Wskazniki wskaznikiPoczatkowe = new Wskazniki(1,600f,100f,100f,false);
 
+	//wskaźniki bólu
+	public static Wskazniki wskaznikiBolu = new Wskazniki(1,0f,0f,0f,false);
+
 	//waypointy
 	public static Hashtable tablicaPunktow = new Hashtable();
 	public static List<string >listaPunktowOdwiedzonych = new List<string>();
@@ -20,15 +23,16 @@ public static class Gra
 	//artefakty
 	public static Hashtable tablicaRozpoznanychArtefaktow = new Hashtable();
 	public static List<Vector3> listaPozycjiZnalezionychArtefaktow = new List<Vector3>();
+	//public static List<Artefakt> listaArtefaktBol = new List<Artefakt>();
 	public static Hashtable tablicaArtefaktBol = new Hashtable();
 
 	//priorytety
 	public static Dictionary<string, int> slownikPriorytetow = new Dictionary<string, int>(){
-		{"wydostanieSieZWiezienia", 5},
-		{"czas", 4},
+		{"wydostanieSieZWiezienia", 1},
+		{"czas", 2},
 		{"bateria", 3},
-		{"naprawa", 2},
-		{"poznawanieArtefaktow", 1}
+		{"naprawa", 4},
+		{"poznawanieArtefaktow", 5}
 	};
 	public static PriorityQueue<string> kolejkaPriorytetowa = new PriorityQueue<string>();
 

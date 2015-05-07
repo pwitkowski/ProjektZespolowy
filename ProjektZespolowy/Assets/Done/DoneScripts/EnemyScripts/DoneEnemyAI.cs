@@ -36,23 +36,133 @@ public class DoneEnemyAI : MonoBehaviour
 	
 	void Update ()
 	{
+		//ustawiam szybkosc
+		nav.speed = patrolSpeed;
+		
+		if (nav.destination == punkt || nav.remainingDistance < nav.stoppingDistance){
+			//podejmowanie decyzji
+			wydostanieSieZWiezienia ();
+			
+			if(czyPoprawicWskazniki()) poprawaWskaznikow ();
+		}
+		
+		//ide do punktu na mapie
+		nav.destination = punkt;
+
+
 		// If the player is in sight and is alive...
-		if(enemySight.playerInSight && playerHealth.health > 0f)
+		//if(enemySight.playerInSight && playerHealth.health > 0f)
 			// ... shoot.
-			Shooting();
+			//Shooting();
 		
 		// If the player has been sighted and isn't dead...
-		else if(enemySight.personalLastSighting != lastPlayerSighting.resetPosition && playerHealth.health > 0f)
+		//else if(enemySight.personalLastSighting != lastPlayerSighting.resetPosition && playerHealth.health > 0f)
 			// ... chase.
-			Chasing();
+			//Chasing();
 		
 		// Otherwise...
-		else
+		//else
 			// ... patrol.
-			Patrolling();
+			//Patrolling();
 	}
-	
-	
+
+	bool czyPoprawicWskazniki (){
+		//zakładam, że wskaźniki muszą utrymywać sie na poziomie 50%
+		if (ObslugaWskaznikow.DajIloscCzasuWPrzeliczeniuNaProcent() <= 50
+			|| Gra.wskazniki.bateria <= 50
+			|| Gra.wskazniki.naprawa <= 50) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	void wydostanieSieZWiezienia (){
+		print("Stan wydostanieSieZWiezienia");
+		//biore pierwszy nieodwiedzony punkt z tablicy
+		listaPunktowDoWyboru = new List<string> ();
+		foreach (DictionaryEntry p in Gra.tablicaPunktow) {
+			if (!Gra.listaPunktowOdwiedzonych.Contains (p.Key.ToString ())) {
+				listaPunktowDoWyboru.Add (p.Key.ToString ());
+				//print("Idę do punktu: "+p.Key.ToString());
+				//punkt = (Vector3) p.Value;
+				//break;
+			}
+		}
+		
+		//wybieram losowy punkt
+		if (listaPunktowDoWyboru.Count > 0) {
+			int index = Random.Range (0, listaPunktowDoWyboru.Count);
+			string nazwaPunktu = listaPunktowDoWyboru [index];
+			//print ("Idę do punktu: " + nazwaPunktu);
+			Gra.WyswietlKomunikatWChmurze("Ide do punktu: " + nazwaPunktu);
+			punkt = (Vector3)Gra.tablicaPunktow [nazwaPunktu];
+		}
+	}	
+
+	void poprawaWskaznikow (){
+		print ("Stan poprawa wskaznikow");
+		if (czyZnamArtefaktKtoryZaspokoiMojePotrzeby()) {
+			//jeśli znam artefakt który zaspokoi moje potrzeby to ide do niego
+			punkt = dajPozycjeArtefaktoKtoryZaspokoiMojePotrzeby(dajAktualnaPorzebeDoZaspokojenia());
+		} else {
+			//w przeciwnym razie zmieniam stan na poznawanie artefaktów
+			poznawanieArtefaktow();
+		}
+	}
+
+	bool czyZnamArtefaktKtoryZaspokoiMojePotrzeby (){
+		//zwraca true jesśli znam pozycję artefaktu jaki może zaspokoić moją potrzebę
+		string potrzeba = dajAktualnaPorzebeDoZaspokojenia ();
+		//TODO zaczytywać dane i przeliczac co jest najlepsze z tablicaArtefaktBol 
+		if (Gra.tablicaRozpoznanychArtefaktow.Contains (potrzeba)) {
+			return true;
+		} else {
+			Gra.WyswietlKomunikatWChmurze ("Nie wiem jak zaspokoic potrzebe "+potrzeba);
+			return false;
+		}
+	}
+
+	string dajAktualnaPorzebeDoZaspokojenia (){
+		//wyszukuje największy ból na wskaźniku
+		var dict = new Dictionary<string, float> {
+			 { "czas", Gra.wskaznikiBolu.czas }
+			,{ "bateria", Gra.wskaznikiBolu.bateria }
+			,{ "naprawa", Gra.wskaznikiBolu.naprawa }
+		};
+		
+		var max = dict.Values.Max();
+		var relevantKey = dict
+			.Where (x => max.Equals (x.Value))
+				.Select (x => x.Key)
+				.FirstOrDefault ();
+
+		print ("Aktualna potrzeba do zaspokojenia: " + relevantKey +" wartość: "+max);
+		return relevantKey;
+	}
+
+	Vector3 dajPozycjeArtefaktoKtoryZaspokoiMojePotrzeby (string potrzeba){
+		//wyswietla komunikat i zwraca pozucje artefaktu jaki możę zaspokoić moją potrzebę 
+		Gra.WyswietlKomunikatWChmurze ("Ide zaspokoic potrzebe "+potrzeba);
+		//zwracam pozycje artefaktu jeśli ją znam
+		return (Vector3) Gra.tablicaRozpoznanychArtefaktow[potrzeba];
+	}
+
+	void poznawanieArtefaktow (){
+		print ("Stan poznawanie artefaktow");
+		if (Gra.listaPozycjiZnalezionychArtefaktow.Count > 0) {
+			//jeśli znaleziono jakieś artefakty to ide do losowego z nich
+			int index = Random.Range (0, Gra.listaPozycjiZnalezionychArtefaktow.Count);
+			punkt = Gra.listaPozycjiZnalezionychArtefaktow [index];
+		}else {
+			//w przeciwnym razie zmieniam stan na przechodzenie waypointow
+			wydostanieSieZWiezienia();
+		}
+	}
+
+
+
+	//------------------------------------------------------------------------------------------------
 	void Shooting ()
 	{
 		// Stop the enemy where it is.
@@ -232,4 +342,6 @@ public class DoneEnemyAI : MonoBehaviour
 		//ide do punktu na mapie
 		nav.destination = punkt;
 	}
+
+	//--------------------------------------------------------------------
 }

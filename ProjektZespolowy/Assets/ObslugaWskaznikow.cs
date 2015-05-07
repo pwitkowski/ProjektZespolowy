@@ -39,15 +39,20 @@ public class ObslugaWskaznikow: MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		//ustawiam napisy i suwaki
 		napisIloscIteracji.text = ""+Gra.wskazniki.iloscIteracji;
 		suwakCzasu.value = DajIloscCzasuWPrzeliczeniuNaProcent();
 		suwakBateri.value = Gra.wskaznikiPoczatkowe.bateria;
 		suwakNaprawy.value = Gra.wskaznikiPoczatkowe.naprawa;
 
+		//ustawiam wskaźniki początkowe
 		Gra.wskazniki.czas = Gra.wskaznikiPoczatkowe.czas;
 		Gra.wskazniki.bateria = Gra.wskaznikiPoczatkowe.bateria;
 		Gra.wskazniki.naprawa = Gra.wskaznikiPoczatkowe.naprawa;
-		kluczDoWindy.active = Gra.wskazniki.kluczDoWindy;
+		Gra.wskazniki.kluczDoWindy = Gra.wskaznikiPoczatkowe.kluczDoWindy;
+
+		//czyszcze dane tj. kolejkaKomunikatów itp.
+		Gra.kolejkaKomunikatow = new System.Collections.Generic.Queue<string>();
 	}
 	
 	// Update is called once per frame
@@ -70,7 +75,8 @@ public class ObslugaWskaznikow: MonoBehaviour {
 
 			kluczDoWindy.active = Gra.wskazniki.kluczDoWindy;
 
-			DodajPriorytetyDoKolejki();
+			//DodajPriorytetyDoKolejki();
+			PrzeliczWskaznikiBolu();
 
 			UstawKolorySuwakow ();
 			
@@ -88,6 +94,15 @@ public class ObslugaWskaznikow: MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	void PrzeliczWskaznikiBolu (){
+		//przelicza wskaźniki bólu według wzoru 100 - wskaźnik / priorytet
+		Gra.wskaznikiBolu.czas = (100f-DajIloscCzasuWPrzeliczeniuNaProcent())/Gra.slownikPriorytetow["czas"];
+		Gra.wskaznikiBolu.bateria = (100f-Gra.wskazniki.bateria)/Gra.slownikPriorytetow["bateria"];
+		Gra.wskaznikiBolu.naprawa = (100f-Gra.wskazniki.naprawa)/Gra.slownikPriorytetow["naprawa"];
+
+		//print ("Wskaźniki bólu: "+Gra.wskaznikiBolu.ToString());
 	}
 
 	void DodajPriorytetyDoKolejki(){
@@ -116,7 +131,7 @@ public class ObslugaWskaznikow: MonoBehaviour {
 		}
 	}
 
-	float DajIloscCzasuWPrzeliczeniuNaProcent(){
+	public static float DajIloscCzasuWPrzeliczeniuNaProcent(){
 		return (float) Math.Round((100 * Gra.wskazniki.czas) / Gra.iloscCzasuWSekundach,1);
 	}
 	

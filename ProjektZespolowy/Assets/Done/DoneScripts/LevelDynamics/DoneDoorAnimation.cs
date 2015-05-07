@@ -11,7 +11,7 @@ public class DoneDoorAnimation : MonoBehaviour
 	private Animator anim;							// Reference to the animator component.
 	private DoneHashIDs hash;						// Reference to the HashIDs script.
 	private GameObject player;						// Reference to the player GameObject.
-	private DonePlayerInventory playerInventory;	// Reference to the PlayerInventory script.
+	//private DonePlayerInventory playerInventory;	// Reference to the PlayerInventory script.
 	private int count;								// The number of colliders present that should open the doors.
 	
 	
@@ -21,7 +21,7 @@ public class DoneDoorAnimation : MonoBehaviour
 		anim = GetComponent<Animator>();
 		hash = GameObject.FindGameObjectWithTag(DoneTags.gameController).GetComponent<DoneHashIDs>();
 		player = GameObject.FindGameObjectWithTag(DoneTags.cialoRobota);
-		playerInventory = player.GetComponent<DonePlayerInventory>();
+		//playerInventory = player.GetComponent<DonePlayerInventory>();
 	}
 	
 	
@@ -34,7 +34,7 @@ public class DoneDoorAnimation : MonoBehaviour
 			if(requireKey)
 			{
 				// ... if the player has the key...
-				if(playerInventory.hasKey)
+				if(Gra.wskazniki.kluczDoWindy)
 					// ... increase the count of triggering objects.
 					count++;
 				else
