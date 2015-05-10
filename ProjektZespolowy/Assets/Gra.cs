@@ -21,9 +21,8 @@ public static class Gra
 	public static List<string >listaPunktowOdwiedzonych = new List<string>();
 
 	//artefakty
-	public static Hashtable tablicaRozpoznanychArtefaktow = new Hashtable();
+	public static Hashtable tablicaPozycjiRozpoznanychArtefaktow = new Hashtable();
 	public static List<Vector3> listaPozycjiZnalezionychArtefaktow = new List<Vector3>();
-	//public static List<Artefakt> listaArtefaktBol = new List<Artefakt>();
 	public static Hashtable tablicaArtefaktBol = new Hashtable();
 
 	//priorytety
@@ -34,7 +33,6 @@ public static class Gra
 		{"naprawa", 4},
 		{"poznawanieArtefaktow", 5}
 	};
-	public static PriorityQueue<string> kolejkaPriorytetowa = new PriorityQueue<string>();
 
 	//komunikaty "chmurka"
 	public static Queue<string> kolejkaKomunikatow = new Queue<string>();

@@ -75,7 +75,6 @@ public class ObslugaWskaznikow: MonoBehaviour {
 
 			kluczDoWindy.active = Gra.wskazniki.kluczDoWindy;
 
-			//DodajPriorytetyDoKolejki();
 			PrzeliczWskaznikiBolu();
 
 			UstawKolorySuwakow ();
@@ -103,16 +102,6 @@ public class ObslugaWskaznikow: MonoBehaviour {
 		Gra.wskaznikiBolu.naprawa = (100f-Gra.wskazniki.naprawa)/Gra.slownikPriorytetow["naprawa"];
 
 		//print ("Wskaźniki bólu: "+Gra.wskaznikiBolu.ToString());
-	}
-
-	void DodajPriorytetyDoKolejki(){
-		//zakładam, że wskaźniki powinny utrzymywać się na poziomie 50 %
-		//jeśli się nie znajdują to dodaje do kolejki priorytetów żeby je poprawić
-		//TODO dodawać do kolejki z powiększonym priorytetem
-		//TODO do największego priorytetu dodawać odpowiedni priorytet z slownikPriorytetow
-		if (Gra.wskazniki.czas <= 50) 		Gra.kolejkaPriorytetowa.Enqueue ("czas");
-		if (Gra.wskazniki.bateria <= 50) 	Gra.kolejkaPriorytetowa.Enqueue ("bateria");
-		if (Gra.wskazniki.naprawa <= 50) 	Gra.kolejkaPriorytetowa.Enqueue ("naprawa");
 	}
 
 	void UstawKolorySuwakow(){

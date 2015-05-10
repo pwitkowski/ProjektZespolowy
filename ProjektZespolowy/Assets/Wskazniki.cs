@@ -32,6 +32,15 @@ public class Wskazniki {
 		this.naprawa = naprawa;
 	}
 
+	public Wskazniki (Wskazniki w)
+	{
+		iloscIteracji = w.iloscIteracji;
+		czas = w.czas;
+		bateria = w.bateria;
+		naprawa = w.naprawa;
+		kluczDoWindy = w.kluczDoWindy;
+	}
+
 	public Wskazniki ()
 	{
 	}

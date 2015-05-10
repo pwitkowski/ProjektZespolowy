@@ -11,81 +11,69 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 	private float doladowanieCzasu = 200f;
 
 	//potrzebne do zapisywania wskaźników przed i po podjęciu decyzji
-	private Wskazniki wskaznikiPrzed;
-	//private Wskazniki wskaznikiPo = new Wskazniki();
+	private Wskazniki wskaznikiPrzed = new Wskazniki();
 
-	void Awake ()
-	{
+	void Awake (){
 		cialoRobota =  GameObject.FindGameObjectWithTag(DoneTags.cialoRobota);
 		poleWidzenia = GameObject.FindGameObjectWithTag(DoneTags.poleWidzenia);
 	}
 		
-	void OnTriggerEnter (Collider other)
-	{
+	void OnTriggerEnter (Collider other){
 		if (other.gameObject == cialoRobota) {
 			//print ("Ciało robota dotyka: " + collider.name);
 			switch (colliderNazwaZawiera (collider.name)) {
 				case "lasery":
-					wskaznikiPrzed = Gra.wskazniki;
+					wskaznikiPrzed = new Wskazniki(Gra.wskazniki);
 					Gra.wskazniki.naprawa -= uszkodzeniaNaprawy;
 					Gra.wskazniki.bateria -= uszkodzeniaBaterii;
 					
 					dodajWspomnieniePoUzyciuArtefaktuDoTablicy(collider, wskaznikiPrzed);
 
-					Gra.WyswietlKomunikatWChmurze("Bateria: -" + uszkodzeniaBaterii + ", Naprawa -" + uszkodzeniaNaprawy);
+					Gra.WyswietlKomunikatWChmurze("Bateria: -" + zaokraglij(uszkodzeniaBaterii) + ", Naprawa -" + zaokraglij(uszkodzeniaNaprawy));
 					//TODO dodać do navmesh jako przeszkoda
 					break;
 				case "bateria":
 					if (Gra.wskazniki.bateria < 100) {
 						float doladowanie  =(100 - Gra.wskazniki.bateria);
-						wskaznikiPrzed = Gra.wskazniki;
+						wskaznikiPrzed = new Wskazniki(Gra.wskazniki);
 						//print ("wskaznikiPrzed= "+wskaznikiPrzed.ToString());
 						Gra.wskazniki.bateria += doladowanie;
 
 						dodajWspomnieniePoUzyciuArtefaktuDoTablicy(collider, wskaznikiPrzed);
 
-						Gra.WyswietlKomunikatWChmurze("Bateria: +" + doladowanie);
+						Gra.WyswietlKomunikatWChmurze("Bateria: +" + zaokraglij(doladowanie));
 						gameObject.active = false;
-
-						//zdejmuje z kolejki podładowanie baterii
-						//Gra.kolejkaPriorytetowa.Dequeue();
 					}
 					break;
 				case "bomba":
-					wskaznikiPrzed = Gra.wskazniki;
+					wskaznikiPrzed = new Wskazniki(Gra.wskazniki);
  					Gra.wskazniki.naprawa -= (uszkodzeniaNaprawy + 40);
 					Gra.wskazniki.bateria -= (uszkodzeniaBaterii + 40);
 					
 					dodajWspomnieniePoUzyciuArtefaktuDoTablicy(collider, wskaznikiPrzed);
 
-					Gra.WyswietlKomunikatWChmurze("Bateria: -" + uszkodzeniaBaterii + ", Naprawa -" + uszkodzeniaNaprawy);
+					Gra.WyswietlKomunikatWChmurze("Bateria: -" + zaokraglij(uszkodzeniaBaterii) + ", Naprawa -" + zaokraglij(uszkodzeniaNaprawy));
 					gameObject.active = false;
 					break;
 				case "zegar":
-					wskaznikiPrzed = Gra.wskazniki;
+					wskaznikiPrzed = new Wskazniki(Gra.wskazniki);
 					Gra.wskazniki.czas += doladowanieCzasu;
 
 					dodajWspomnieniePoUzyciuArtefaktuDoTablicy(collider, wskaznikiPrzed);
 
-					Gra.WyswietlKomunikatWChmurze("Czas +" + doladowanieCzasu);
+					Gra.WyswietlKomunikatWChmurze("Czas +" + zaokraglij(doladowanieCzasu));
 					gameObject.active = false;
-
-					//zdejmuje z kolejki zdobycie troche czasu
-					//Gra.kolejkaPriorytetowa.Dequeue();
 					break;
 				case "apteczka":
 					if (Gra.wskazniki.naprawa < 100) {
 						float doladowanieNaprawy  =(100 - Gra.wskazniki.naprawa);
-						wskaznikiPrzed = Gra.wskazniki;
+						wskaznikiPrzed = new Wskazniki(Gra.wskazniki);;
 						Gra.wskazniki.naprawa += doladowanieNaprawy;
 						
 						dodajWspomnieniePoUzyciuArtefaktuDoTablicy(collider, wskaznikiPrzed);
 
-						Gra.WyswietlKomunikatWChmurze("Naprawa: +" + doladowanieNaprawy);
+						Gra.WyswietlKomunikatWChmurze("Naprawa: +" + zaokraglij(doladowanieNaprawy));
 						gameObject.active = false;
-
-						//zdejmuje z kolejki podreperowanie się
-						//Gra.kolejkaPriorytetowa.Dequeue();
 					}			
 					break;
 				case "punkt":
@@ -96,7 +84,7 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 					}
 					break;
 				case "kluczDoWindy":
-					wskaznikiPrzed = Gra.wskazniki;
+					wskaznikiPrzed = new Wskazniki(Gra.wskazniki);
 					Gra.wskazniki.kluczDoWindy = true;
 					
 					dodajWspomnieniePoUzyciuArtefaktuDoTablicy(collider, wskaznikiPrzed);
@@ -127,39 +115,42 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 	}
 
 	private void dodajWspomnieniePoUzyciuArtefaktuDoTablicy(Collider collider, Wskazniki wskaznikiPrzedParam){
-		//dodaje rekordy do tablicaArtefaktBol jak zmieniły się wskaźniki po użyciu danego artefaktu
-		//print ("wskaznikiPrzed= " + wskaznikiPrzedParam.ToString()); //TODO wtf czemu wartosci sa inne ???
-		//print ("wskaznikiPo= " + Gra.wskazniki.ToString());
-
 		Wskazniki wskaznikiBulu = new Wskazniki();
 		wskaznikiBulu.czas = Gra.wskazniki.czas - wskaznikiPrzedParam.czas;
 		wskaznikiBulu.bateria = Gra.wskazniki.bateria - wskaznikiPrzedParam.bateria;
 		wskaznikiBulu.naprawa = Gra.wskazniki.naprawa - wskaznikiPrzedParam.naprawa;
 
-		//print ("Wskazniki bulu: " + wskaznikiBulu.ToString ());
-		//TODO sprawdzić czy wskaźniki przeliczają sie dobrze
+		print ("Wskazniki bulu dla : "+collider.name+" to:"+ wskaznikiBulu.ToString ());
 
 		if (!Gra.tablicaArtefaktBol.ContainsKey (collider.name)) {
-			//print("Dodaje do tablicy artefatk ból jak zmieniły się wskaźniki po użyciu artefaktu: "+collider.name+" wskaźniki: "+wskaznikiBulu.ToString());
+			print("Dodaje do tablicy artefatk ból jak zmieniły się wskaźniki po użyciu artefaktu: "+collider.name+" wskaźniki: "+wskaznikiBulu.ToString());
 			Gra.tablicaArtefaktBol.Add(collider.name, wskaznikiBulu);
 		}
 
 		usunPozycjeArtefaktuZListy (collider.transform.position);
+		dodajDoTablicyPozycjiRozpoznanychArtefaktow (collider);
 
+	}
+
+	void dodajDoTablicyPozycjiRozpoznanychArtefaktow (Collider collider){
+		//dodaje nazwę artefaktu i pozycje do tablicy rozpoznanyh artefaktów
+		if (!Gra.tablicaPozycjiRozpoznanychArtefaktow.Contains (collider.name)) {
+			Gra.tablicaPozycjiRozpoznanychArtefaktow.Add(collider.name, collider.transform.position);
+		}
 	}
 
 	private void dodajPozycjeArtefaktuDoListy(Vector3 punktArtefaktu){
 		//dodaje nowy punkt nieznanego artefaktu do listy znalezionych artefaktów
 		if(!Gra.listaPozycjiZnalezionychArtefaktow.Contains(punktArtefaktu)){
-			//print("Dodaje nowy punkt do listy znalezionych artefaktów: "+punktArtefaktu);
+			print("Dodaje nowy punkt do listy znalezionych artefaktów: "+punktArtefaktu);
 			Gra.listaPozycjiZnalezionychArtefaktow.Add(collider.transform.position);
 		}
 	}
 
 	private void usunPozycjeArtefaktuZListy(Vector3 punktArtefaktu){
 		//usuwa punkt znanego artefaktu z listy znalezionych artefaktów
-		if(!Gra.listaPozycjiZnalezionychArtefaktow.Contains(punktArtefaktu)){
-			//print("Usuwam punkt z listy znalezionych artefaktów: "+punktArtefaktu);
+		if(Gra.listaPozycjiZnalezionychArtefaktow.Contains(punktArtefaktu)){
+			print("Usuwam punkt z listy znalezionych artefaktów: "+punktArtefaktu);
 			Gra.listaPozycjiZnalezionychArtefaktow.Remove(collider.transform.position);
 		}
 	}
@@ -168,5 +159,13 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 		if (name.Contains("fx_laserFence")) return "lasery"; 
 		if (name.Contains("wayPoint")) return "punkt"; 
 		return name;
+	}
+
+	private float zaokraglij(float wartosc){
+		return (float) Math.Round (wartosc);
+	}
+
+	private double zaokraglij(double wartosc){
+		return (double) Math.Round (wartosc);
 	}
 }

@@ -22,8 +22,7 @@ public class DoneEnemyAI : MonoBehaviour
 	private Vector3 punkt;
 	private List<string> listaPunktowDoWyboru = new List<string>();
 
-	void Awake ()
-	{
+	void Awake (){
 		// Setting up the references.
 		enemySight = GetComponent<DoneEnemySight>();
 		nav = GetComponent<NavMeshAgent>();
@@ -33,37 +32,20 @@ public class DoneEnemyAI : MonoBehaviour
 		punkt = new Vector3();
 	}
 	
-	
-	void Update ()
-	{
+	void Update (){
 		//ustawiam szybkosc
 		nav.speed = patrolSpeed;
-		
+
+		//jeśli dojdzie do kolejnego punktu na mapie podejmuje decyzję
 		if (nav.destination == punkt || nav.remainingDistance < nav.stoppingDistance){
 			//podejmowanie decyzji
-			wydostanieSieZWiezienia ();
+			stanWydostanieSieZWiezienia ();
 			
-			if(czyPoprawicWskazniki()) poprawaWskaznikow ();
+			if(czyPoprawicWskazniki()) stanPoprawaWskaznikow ();
 		}
 		
 		//ide do punktu na mapie
 		nav.destination = punkt;
-
-
-		// If the player is in sight and is alive...
-		//if(enemySight.playerInSight && playerHealth.health > 0f)
-			// ... shoot.
-			//Shooting();
-		
-		// If the player has been sighted and isn't dead...
-		//else if(enemySight.personalLastSighting != lastPlayerSighting.resetPosition && playerHealth.health > 0f)
-			// ... chase.
-			//Chasing();
-		
-		// Otherwise...
-		//else
-			// ... patrol.
-			//Patrolling();
 	}
 
 	bool czyPoprawicWskazniki (){
@@ -77,7 +59,7 @@ public class DoneEnemyAI : MonoBehaviour
 		}
 	}
 
-	void wydostanieSieZWiezienia (){
+	void stanWydostanieSieZWiezienia (){
 		print("Stan wydostanieSieZWiezienia");
 		//biore pierwszy nieodwiedzony punkt z tablicy
 		listaPunktowDoWyboru = new List<string> ();
@@ -100,11 +82,11 @@ public class DoneEnemyAI : MonoBehaviour
 		}
 	}	
 
-	void poprawaWskaznikow (){
+	void stanPoprawaWskaznikow (){
 		print ("Stan poprawa wskaznikow");
 		if (czyZnamArtefaktKtoryZaspokoiMojePotrzeby()) {
 			//jeśli znam artefakt który zaspokoi moje potrzeby to ide do niego
-			punkt = dajPozycjeArtefaktoKtoryZaspokoiMojePotrzeby(dajAktualnaPorzebeDoZaspokojenia());
+			punkt = dajPozycjeArtefaktoKtoryZaspokoiMojePotrzeby(dajNazweArtefaktuKtoryNajbardziejZaspokajaMojaPotrzebe(dajAktualnaPorzebeDoZaspokojenia()));
 		} else {
 			//w przeciwnym razie zmieniam stan na poznawanie artefaktów
 			poznawanieArtefaktow();
@@ -112,10 +94,19 @@ public class DoneEnemyAI : MonoBehaviour
 	}
 
 	bool czyZnamArtefaktKtoryZaspokoiMojePotrzeby (){
-		//zwraca true jesśli znam pozycję artefaktu jaki może zaspokoić moją potrzebę
+		//zwraca true jeśli znam pozycję artefaktu jaki może zaspokoić moją potrzebę
+
+		//sprawdzam jaką potrzebę muszę zaspokoić
 		string potrzeba = dajAktualnaPorzebeDoZaspokojenia ();
-		//TODO zaczytywać dane i przeliczac co jest najlepsze z tablicaArtefaktBol 
-		if (Gra.tablicaRozpoznanychArtefaktow.Contains (potrzeba)) {
+
+		//sprawdzam jaki artefakt najbardziej zaspakaja moją potrzebę 
+		string artefakt = dajNazweArtefaktuKtoryNajbardziejZaspokajaMojaPotrzebe(potrzeba);
+
+		foreach(DictionaryEntry entry in Gra.tablicaPozycjiRozpoznanychArtefaktow){
+			print("Rozpoznane artefakty: "+entry.Key);
+		}
+
+		if (Gra.tablicaPozycjiRozpoznanychArtefaktow.Contains (artefakt)) {
 			return true;
 		} else {
 			Gra.WyswietlKomunikatWChmurze ("Nie wiem jak zaspokoic potrzebe "+potrzeba);
@@ -135,17 +126,69 @@ public class DoneEnemyAI : MonoBehaviour
 		var relevantKey = dict
 			.Where (x => max.Equals (x.Value))
 				.Select (x => x.Key)
+//				.First ();
 				.FirstOrDefault ();
 
 		print ("Aktualna potrzeba do zaspokojenia: " + relevantKey +" wartość: "+max);
 		return relevantKey;
 	}
 
-	Vector3 dajPozycjeArtefaktoKtoryZaspokoiMojePotrzeby (string potrzeba){
-		//wyswietla komunikat i zwraca pozucje artefaktu jaki możę zaspokoić moją potrzebę 
-		Gra.WyswietlKomunikatWChmurze ("Ide zaspokoic potrzebe "+potrzeba);
-		//zwracam pozycje artefaktu jeśli ją znam
-		return (Vector3) Gra.tablicaRozpoznanychArtefaktow[potrzeba];
+	string dajNazweArtefaktuKtoryNajbardziejZaspokajaMojaPotrzebe (string potrzeba){
+		Dictionary<string, float> dict = new Dictionary<string, float>();
+		string artefakt = "";
+		float max = 0f;
+		switch (potrzeba) {
+			case "czas":
+				foreach (DictionaryEntry entry in Gra.tablicaArtefaktBol){
+					string klucz = (string) entry.Key;
+					Wskazniki wartosc = (Wskazniki) entry.Value;
+					dict.Add(klucz,wartosc.czas);
+				}
+				break;
+			case "bateria":
+				foreach (DictionaryEntry entry in Gra.tablicaArtefaktBol){
+					string klucz = (string) entry.Key;
+					Wskazniki wartosc = (Wskazniki) entry.Value;
+					dict.Add(klucz,wartosc.bateria);
+				}
+				break;
+			case "naprawa":
+			foreach (DictionaryEntry entry in Gra.tablicaArtefaktBol){
+					string klucz = (string) entry.Key;
+					Wskazniki wartosc = (Wskazniki) entry.Value;
+					dict.Add(klucz,wartosc.naprawa);
+				}
+				break;
+			default:
+				print ("Nie poznałem jeszcze żadnych artefaktów");
+				break;
+		}
+
+		foreach (KeyValuePair<string, float> entry in dict) {
+			print("Potrzeba: "+potrzeba+" artefakt: "+entry.Key+" wartość: "+entry.Value);
+		}
+
+		if (dict.Count > 0) {
+			max = dict.Values.Max ();
+			artefakt = dict
+			.Where (x => max.Equals (x.Value))
+				.Select (x => x.Key)
+//				.First ();
+				.FirstOrDefault ();
+		}
+
+		if (dict.Count == 0 || max <= 0f || artefakt == null){
+			print("Nie znalazłem artefaktu który mógłby zaspokoić moją potrzebę");
+			return "";
+		}
+			
+		print ("Artefakt który najbardziej zaspokaja potrzebę: "+potrzeba+" to: " + artefakt +" wartość jego to: "+max);
+		return artefakt;
+	}
+
+	Vector3 dajPozycjeArtefaktoKtoryZaspokoiMojePotrzeby (string artefakt){
+		//zwraca pozycje artefaktu który najbardziej zaspokoja moja potrzebe
+		return (Vector3) Gra.tablicaPozycjiRozpoznanychArtefaktow[artefakt];
 	}
 
 	void poznawanieArtefaktow (){
@@ -156,192 +199,7 @@ public class DoneEnemyAI : MonoBehaviour
 			punkt = Gra.listaPozycjiZnalezionychArtefaktow [index];
 		}else {
 			//w przeciwnym razie zmieniam stan na przechodzenie waypointow
-			wydostanieSieZWiezienia();
+			stanWydostanieSieZWiezienia();
 		}
 	}
-
-
-
-	//------------------------------------------------------------------------------------------------
-	void Shooting ()
-	{
-		// Stop the enemy where it is.
-		nav.Stop();
-	}
-	
-	
-	void Chasing ()
-	{
-		// Create a vector from the enemy to the last sighting of the player.
-		Vector3 sightingDeltaPos = enemySight.personalLastSighting - transform.position;
-		
-		// If the the last personal sighting of the player is not close...
-		if(sightingDeltaPos.sqrMagnitude > 4f)
-			// ... set the destination for the NavMeshAgent to the last personal sighting of the player.
-			nav.destination = enemySight.personalLastSighting;
-		
-		// Set the appropriate speed for the NavMeshAgent.
-		nav.speed = chaseSpeed;
-		
-		// If near the last personal sighting...
-		if(nav.remainingDistance < nav.stoppingDistance)
-		{
-			// ... increment the timer.
-			chaseTimer += Time.deltaTime;
-			
-			// If the timer exceeds the wait time...
-			if(chaseTimer >= chaseWaitTime)
-			{
-				// ... reset last global sighting, the last personal sighting and the timer.
-				lastPlayerSighting.position = lastPlayerSighting.resetPosition;
-				enemySight.personalLastSighting = lastPlayerSighting.resetPosition;
-				chaseTimer = 0f;
-			}
-		}
-		else
-			// If not near the last sighting personal sighting of the player, reset the timer.
-			chaseTimer = 0f;
-	}
-
-	void podejmowanieDecyzji(){
-		string decyzja = Gra.kolejkaPriorytetowa.Peek();
-		if (decyzja != null && decyzja.Length > 0) {
-			print ("Decyzja z kolejki: " + decyzja);
-			switch(decyzja){
-				case "wydostanieSieZWiezienia":
-					//przechodze kolejne waypointy
-					idzDoKolejnegoWaypointa();
-					break;
-				case "czas":
-					//ide zdobyc troche czasu
-					idzZdobycTrocheCzasu();
-					break;
-				case "bateria":
-					//ide podładować baterie
-					idzPodladowacBaterie();
-					break;
-				case "naprawa" :
-					//ide się podreperować
-					idzPodreperowacSie();
-					break;
-				case "poznawanieArtefaktow":
-					//idzie poznawać nowe artefakty
-					idzPoznawacNoweArtefakty();
-					break;
-			}
-		} else {
-			//usuwam z kolejkaPriorytetowa pierwszy nullowy element i dodaje nowy z najwyższym priorytetem z tablicaPriorytetow
-			print("Czyszcze kolejke priorytetowa i dodane nowy z najwyższym priorytetem z tablicaPriorytetow");
-			Gra.kolejkaPriorytetowa.Dequeue();
-			Gra.kolejkaPriorytetowa.Enqueue(dajNajwiekszyPriorytetZeSlownika());
-			podejmowanieDecyzji();
-		}
-	}
-
-	void idzDoKolejnegoWaypointa(){
-		print("Ide do kolejnego waypointa");
-		//biore pierwszy nieodwiedzony punkt z tablicy
-		listaPunktowDoWyboru = new List<string> ();
-		foreach (DictionaryEntry p in Gra.tablicaPunktow) {
-			if (!Gra.listaPunktowOdwiedzonych.Contains (p.Key.ToString ())) {
-				listaPunktowDoWyboru.Add (p.Key.ToString ());
-				//print("Idę do punktu: "+p.Key.ToString());
-				//punkt = (Vector3) p.Value;
-				//break;
-			}
-		}
-		
-		//wybieram losowy punkt
-		if (listaPunktowDoWyboru.Count > 0) {
-			int index = Random.Range (0, listaPunktowDoWyboru.Count);
-			string nazwaPunktu = listaPunktowDoWyboru [index];
-			//print ("Idę do punktu: " + nazwaPunktu);
-			Gra.WyswietlKomunikatWChmurze("Ide do punktu: " + nazwaPunktu);
-			punkt = (Vector3)Gra.tablicaPunktow [nazwaPunktu];
-		}
-	}
-
-	void idzZdobycTrocheCzasu(){
-		print("Ide zyskać trochę czasu");
-		//TODO przeliczyc z tablicaArtefaktBol przez jaki artefaky zyska najwiecej czasu
-		if (Gra.tablicaRozpoznanychArtefaktow.Contains ("zegar")) {
-			//print ("Ide zyskac troche czasu");
-			Gra.WyswietlKomunikatWChmurze ("Ide zyskac troche czasu");
-			//zwracam pozycje zegara jeśli ją znam
-			punkt = (Vector3) Gra.tablicaRozpoznanychArtefaktow["zegar"];
-		} else {
-			//print("Nie wiem gdzie jest zegar. Szukam dalej ...");
-			Gra.WyswietlKomunikatWChmurze ("Zdobylbym troche wiecej czasu ale nie wiem jak ...");
-			//Gra.kolejkaPriorytetowa.Dequeue();
-			//Gra.kolejkaPriorytetowa.Enqueue("poznawanieArtefaktow"); //TODO dodać odpowiedni priorytet
-			idzPoznawacNoweArtefakty();
-		}
-	}
-
-	void idzPodladowacBaterie(){
-		print("Ide podladować baterie");
-		//TODO przeliczyc z tablicaArtefaktBol jaki artefaky naładuje najwiecej baterii
-		if (Gra.tablicaRozpoznanychArtefaktow.Contains ("bateria")) {
-			//print ("Ide podladowac baterie");
-			Gra.WyswietlKomunikatWChmurze ("Ide podladowac baterie");
-			//zwracam pozycje baterii jeśli ją znam
-			punkt = (Vector3) Gra.tablicaRozpoznanychArtefaktow["bateria"];
-		} else {
-			//print("Nie wiem gdzie jest bateria. Szukam dalej ...");
-			Gra.WyswietlKomunikatWChmurze ("Podladowalbym baterie ale nie wiem gdzie jest ...");
-			//Gra.kolejkaPriorytetowa.Dequeue();
-			//Gra.kolejkaPriorytetowa.Enqueue("poznawanieArtefaktow"); //TODO dodać odpowiedni priorytet
-			idzPoznawacNoweArtefakty();
-		}
-	}
-
-	void idzPodreperowacSie(){
-		print("Ide podreperowac się");
-		//TODO przeliczyc z tablicaArtefaktBol jaki artefaky najwięcej podreperuje
-		if (Gra.tablicaRozpoznanychArtefaktow.Contains ("apteczka")) {
-			//print ("Ide podreperowac uklady scalone");
-			Gra.WyswietlKomunikatWChmurze ("Ide podladowac uklady scalone");
-			//zwracam pozycje apteczki jeśli ją znam
-			punkt = (Vector3) Gra.tablicaRozpoznanychArtefaktow["apteczka"];
-		} else {
-			//print("Nie wiem gdzie jest apteczka. Szukam dalej ...");
-			Gra.WyswietlKomunikatWChmurze ("Podreperowalbym sie ale nie wiem jak ...");
-			//Gra.kolejkaPriorytetowa.Dequeue();
-			//Gra.kolejkaPriorytetowa.Enqueue("poznawanieArtefaktow"); //TODO dodać odpowiedni priorytet
-			idzPoznawacNoweArtefakty();
-		}
-	}
-
-	void idzPoznawacNoweArtefakty(){
-		print("Ide poznawać artefakty");
-		if (Gra.listaPozycjiZnalezionychArtefaktow.Count > 0) {
-			//jeśli znaleziono jakieś artefakty to ide do losowego z nich
-			int index = Random.Range (0, Gra.listaPozycjiZnalezionychArtefaktow.Count);
-			punkt = Gra.listaPozycjiZnalezionychArtefaktow [index];
-		} else {
-			//Gra.kolejkaPriorytetowa.Dequeue();
-			//Gra.kolejkaPriorytetowa.Enqueue("wydostanieSieZWiezienia"); //TODO dodać odpowiedni priorytet
-			idzDoKolejnegoWaypointa();
-		}
-	}
-
-	string dajNajwiekszyPriorytetZeSlownika(){
-		// print("Najwiekszy priorytet: " + Gra.slownikPriorytetow.Keys.First ());
-		return Gra.slownikPriorytetow.Keys.First();
-	}
-	
-	void Patrolling(){
-		//ustawiam szybkosc
-		nav.speed = patrolSpeed;
-
-		if (nav.destination == punkt || nav.remainingDistance < nav.stoppingDistance){
-			//podejmuje decyzje
-			podejmowanieDecyzji();
-		}
-
-		//ide do punktu na mapie
-		nav.destination = punkt;
-	}
-
-	//--------------------------------------------------------------------
 }
