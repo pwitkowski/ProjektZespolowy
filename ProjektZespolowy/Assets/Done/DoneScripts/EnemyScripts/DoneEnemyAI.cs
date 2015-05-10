@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class DoneEnemyAI : MonoBehaviour
 {
@@ -52,7 +53,9 @@ public class DoneEnemyAI : MonoBehaviour
 		//zakładam, że wskaźniki muszą utrymywać sie na poziomie 50%
 		if (ObslugaWskaznikow.DajIloscCzasuWPrzeliczeniuNaProcent() <= 50
 			|| Gra.wskazniki.bateria <= 50
-			|| Gra.wskazniki.naprawa <= 50) {
+			|| Gra.wskazniki.naprawa <= 50
+//		    || Gra.wskazniki.kluczDoWindy == false 
+		    || Gra.czyPotrzebujeKluczaDoWindy ) {
 			return true;
 		} else {
 			return false;
@@ -74,7 +77,8 @@ public class DoneEnemyAI : MonoBehaviour
 		
 		//wybieram losowy punkt
 		if (listaPunktowDoWyboru.Count > 0) {
-			int index = Random.Range (0, listaPunktowDoWyboru.Count);
+			System.Random r = new System.Random();
+			int index = r.Next (0, listaPunktowDoWyboru.Count);
 			string nazwaPunktu = listaPunktowDoWyboru [index];
 			//print ("Idę do punktu: " + nazwaPunktu);
 			Gra.WyswietlKomunikatWChmurze("Ide do punktu: " + nazwaPunktu);
@@ -120,8 +124,11 @@ public class DoneEnemyAI : MonoBehaviour
 			 { "czas", Gra.wskaznikiBolu.czas }
 			,{ "bateria", Gra.wskaznikiBolu.bateria }
 			,{ "naprawa", Gra.wskaznikiBolu.naprawa }
+//			,{ "kluczDoWindy", Gra.wskaznikiBolu.kluczDoWindy ? 0f : 1f } //jeśli nie mam klucza to ustawiam 1 w przeciwnym razie 0
 		};
-		
+
+		if (Gra.czyPotrzebujeKluczaDoWindy) dict.Add ("kluczDoWindy", 1f); //TODO dawać jakąś lepszą wartość
+
 		var max = dict.Values.Max();
 		var relevantKey = dict
 			.Where (x => max.Equals (x.Value))
@@ -153,10 +160,17 @@ public class DoneEnemyAI : MonoBehaviour
 				}
 				break;
 			case "naprawa":
-			foreach (DictionaryEntry entry in Gra.tablicaArtefaktBol){
+				foreach (DictionaryEntry entry in Gra.tablicaArtefaktBol){
 					string klucz = (string) entry.Key;
 					Wskazniki wartosc = (Wskazniki) entry.Value;
 					dict.Add(klucz,wartosc.naprawa);
+				}
+				break;
+			case "kluczDoWindy":
+				foreach (DictionaryEntry entry in Gra.tablicaArtefaktBol){
+					string klucz = (string) entry.Key;
+					Wskazniki wartosc = (Wskazniki) entry.Value;
+					dict.Add(klucz,wartosc.kluczDoWindy ? 1f : 0f);
 				}
 				break;
 			default:
@@ -195,7 +209,8 @@ public class DoneEnemyAI : MonoBehaviour
 		print ("Stan poznawanie artefaktow");
 		if (Gra.listaPozycjiZnalezionychArtefaktow.Count > 0) {
 			//jeśli znaleziono jakieś artefakty to ide do losowego z nich
-			int index = Random.Range (0, Gra.listaPozycjiZnalezionychArtefaktow.Count);
+			System.Random r = new System.Random();
+			int index = r.Next(0, Gra.listaPozycjiZnalezionychArtefaktow.Count);
 			punkt = Gra.listaPozycjiZnalezionychArtefaktow [index];
 		}else {
 			//w przeciwnym razie zmieniam stan na przechodzenie waypointow

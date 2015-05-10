@@ -7,7 +7,7 @@ public class OdradzanieArtefaktow : MonoBehaviour {
 	public GameObject bomba;
 	public GameObject zegar;
 	public GameObject apteczka;
-	public float czasOdrodzenia = 5f; //ustawiany w unity
+	public float czasOdrodzenia = 10f; //ustawiany w unity
 	
 	void Start ()
 	{

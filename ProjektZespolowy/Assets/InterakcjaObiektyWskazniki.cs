@@ -6,6 +6,7 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 {
 	private GameObject cialoRobota;
 	private GameObject poleWidzenia;
+	private NavMeshAgent agent;
 	private float uszkodzeniaBaterii = 10f;
 	private float uszkodzeniaNaprawy = 50f;
 	private float doladowanieCzasu = 200f;
@@ -16,6 +17,7 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 	void Awake (){
 		cialoRobota =  GameObject.FindGameObjectWithTag(DoneTags.cialoRobota);
 		poleWidzenia = GameObject.FindGameObjectWithTag(DoneTags.poleWidzenia);
+		agent = GameObject.FindGameObjectWithTag(DoneTags.player).GetComponent<NavMeshAgent>();
 	}
 		
 	void OnTriggerEnter (Collider other){
@@ -23,14 +25,19 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 			//print ("Ciało robota dotyka: " + collider.name);
 			switch (colliderNazwaZawiera (collider.name)) {
 				case "lasery":
-					wskaznikiPrzed = new Wskazniki(Gra.wskazniki);
-					Gra.wskazniki.naprawa -= uszkodzeniaNaprawy;
-					Gra.wskazniki.bateria -= uszkodzeniaBaterii;
-					
-					dodajWspomnieniePoUzyciuArtefaktuDoTablicy(collider, wskaznikiPrzed);
+					if(Gra.tablicaPozycjiRozpoznanychArtefaktow.Contains(collider.name)){
+						agent.Stop();
+						agent.speed = 0f;
+						Gra.WyswietlKomunikatWChmurze("Znam juz to dziadostwo.\n Nie wchodze w to !");
+					}else {
+						wskaznikiPrzed = new Wskazniki(Gra.wskazniki);
+						Gra.wskazniki.naprawa -= uszkodzeniaNaprawy;
+						Gra.wskazniki.bateria -= uszkodzeniaBaterii;
+						
+						dodajWspomnieniePoUzyciuArtefaktuDoTablicy(collider, wskaznikiPrzed);
 
-					Gra.WyswietlKomunikatWChmurze("Bateria: -" + zaokraglij(uszkodzeniaBaterii) + ", Naprawa -" + zaokraglij(uszkodzeniaNaprawy));
-					//TODO dodać do navmesh jako przeszkoda
+						Gra.WyswietlKomunikatWChmurze("Bateria: -" + zaokraglij(uszkodzeniaBaterii) + ", Naprawa -" + zaokraglij(uszkodzeniaNaprawy));
+					}
 					break;
 				case "bateria":
 					if (Gra.wskazniki.bateria < 100) {
@@ -92,6 +99,10 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 					Gra.WyswietlKomunikatWChmurze("Znalazlem klucz do windy");
 					gameObject.active = false;
 					break;
+				case "door_exit_outer":
+					Gra.WyswietlKomunikatWChmurze("Potrzebuje klucza do windy");
+					Gra.czyPotrzebujeKluczaDoWindy = true;
+					break;
 			}
 		}
 
@@ -119,6 +130,7 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 		wskaznikiBulu.czas = Gra.wskazniki.czas - wskaznikiPrzedParam.czas;
 		wskaznikiBulu.bateria = Gra.wskazniki.bateria - wskaznikiPrzedParam.bateria;
 		wskaznikiBulu.naprawa = Gra.wskazniki.naprawa - wskaznikiPrzedParam.naprawa;
+		wskaznikiBulu.kluczDoWindy = Gra.wskazniki.kluczDoWindy;
 
 		print ("Wskazniki bulu dla : "+collider.name+" to:"+ wskaznikiBulu.ToString ());
 
@@ -127,9 +139,8 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 			Gra.tablicaArtefaktBol.Add(collider.name, wskaznikiBulu);
 		}
 
-		usunPozycjeArtefaktuZListy (collider.transform.position);
 		dodajDoTablicyPozycjiRozpoznanychArtefaktow (collider);
-
+		usunPozycjeArtefaktuZListy (collider.transform.position);
 	}
 
 	void dodajDoTablicyPozycjiRozpoznanychArtefaktow (Collider collider){
@@ -141,7 +152,8 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 
 	private void dodajPozycjeArtefaktuDoListy(Vector3 punktArtefaktu){
 		//dodaje nowy punkt nieznanego artefaktu do listy znalezionych artefaktów
-		if(!Gra.listaPozycjiZnalezionychArtefaktow.Contains(punktArtefaktu)){
+		if(!Gra.listaPozycjiZnalezionychArtefaktow.Contains(punktArtefaktu)
+		   	&& !Gra.tablicaPozycjiRozpoznanychArtefaktow.ContainsValue(punktArtefaktu)){
 			print("Dodaje nowy punkt do listy znalezionych artefaktów: "+punktArtefaktu);
 			Gra.listaPozycjiZnalezionychArtefaktow.Add(collider.transform.position);
 		}

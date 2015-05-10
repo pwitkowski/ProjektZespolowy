@@ -31,8 +31,10 @@ public static class Gra
 		{"czas", 2},
 		{"bateria", 3},
 		{"naprawa", 4},
+//		{"kluczDoWindy", 5},
 		{"poznawanieArtefaktow", 5}
 	};
+	public static bool czyPotrzebujeKluczaDoWindy = false;
 
 	//komunikaty "chmurka"
 	public static Queue<string> kolejkaKomunikatow = new Queue<string>();
