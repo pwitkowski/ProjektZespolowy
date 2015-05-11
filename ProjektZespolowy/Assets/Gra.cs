@@ -10,7 +10,7 @@ public static class Gra
 	public static float szybkoscRozladowaniaBaterii = 0.02f;
 	public static Wskazniki wskazniki = new Wskazniki(1,600f,100f,100f,false);
 
-	//zapamietujemy wartoci poczatkowe. Potrzebne przy restarcie.
+	//zapamiętujemy wartości początkowe. Potrzebne przy restarcie.
 	public static Wskazniki wskaznikiPoczatkowe = new Wskazniki(1,600f,100f,100f,false);
 
 	//wskaźniki bólu
@@ -31,8 +31,8 @@ public static class Gra
 		{"czas", 2},
 		{"bateria", 3},
 		{"naprawa", 4},
-//		{"kluczDoWindy", 5},
-		{"poznawanieArtefaktow", 5}
+		{"kluczDoWindy", 5},
+		{"poznawanieArtefaktow", 6}
 	};
 	public static bool czyPotrzebujeKluczaDoWindy = false;
 

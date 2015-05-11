@@ -25,11 +25,11 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 			//print ("Ciało robota dotyka: " + collider.name);
 			switch (colliderNazwaZawiera (collider.name)) {
 				case "lasery":
-					if(Gra.tablicaPozycjiRozpoznanychArtefaktow.Contains(collider.name)){
-						agent.Stop();
-						agent.speed = 0f;
-						Gra.WyswietlKomunikatWChmurze("Znam juz to dziadostwo.\n Nie wchodze w to !");
-					}else {
+//					if(Gra.tablicaPozycjiRozpoznanychArtefaktow.Contains(collider.name)){
+//						agent.Stop();
+//						agent.speed = 0f;
+//						Gra.WyswietlKomunikatWChmurze("Znam juz to dziadostwo.\n Nie wchodze w to !");
+//					}else {
 						wskaznikiPrzed = new Wskazniki(Gra.wskazniki);
 						Gra.wskazniki.naprawa -= uszkodzeniaNaprawy;
 						Gra.wskazniki.bateria -= uszkodzeniaBaterii;
@@ -37,7 +37,7 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 						dodajWspomnieniePoUzyciuArtefaktuDoTablicy(collider, wskaznikiPrzed);
 
 						Gra.WyswietlKomunikatWChmurze("Bateria: -" + zaokraglij(uszkodzeniaBaterii) + ", Naprawa -" + zaokraglij(uszkodzeniaNaprawy));
-					}
+//					}
 					break;
 				case "bateria":
 					if (Gra.wskazniki.bateria < 100) {

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class DoneSceneFadeInOut : MonoBehaviour
 {
 	public float fadeSpeed = 1.5f;			// Speed that the screen fades to and from black.
-	public Text iloscIteracji;
+//	public Text iloscIteracji;
 	
 	private bool sceneStarting = true;		// Whether or not the scene is still fading in.
 	

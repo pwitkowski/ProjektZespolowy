@@ -100,7 +100,6 @@ public class ObslugaWskaznikow: MonoBehaviour {
 		Gra.wskaznikiBolu.czas = (100f-DajIloscCzasuWPrzeliczeniuNaProcent())/Gra.slownikPriorytetow["czas"];
 		Gra.wskaznikiBolu.bateria = (100f-Gra.wskazniki.bateria)/Gra.slownikPriorytetow["bateria"];
 		Gra.wskaznikiBolu.naprawa = (100f-Gra.wskazniki.naprawa)/Gra.slownikPriorytetow["naprawa"];
-//		Gra.wskaznikiBolu.kluczDoWindy = Gra.wskazniki.kluczDoWindy ? false : true; //jeśli nie mam klucza to ustawiam 1 w przeciwnym razie 0
 
 		//print ("Wskaźniki bólu: "+Gra.wskaznikiBolu.ToString());
 	}

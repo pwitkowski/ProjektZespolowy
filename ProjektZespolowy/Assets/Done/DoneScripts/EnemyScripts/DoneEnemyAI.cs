@@ -34,6 +34,10 @@ public class DoneEnemyAI : MonoBehaviour
 	}
 	
 	void Update (){
+//		if (nav.speed == 0) {
+//			Gra.WyswietlKomunikatWChmurze("Nie ide dalej !");
+//		}
+
 		//ustawiam szybkosc
 		nav.speed = patrolSpeed;
 
@@ -54,7 +58,6 @@ public class DoneEnemyAI : MonoBehaviour
 		if (ObslugaWskaznikow.DajIloscCzasuWPrzeliczeniuNaProcent() <= 50
 			|| Gra.wskazniki.bateria <= 50
 			|| Gra.wskazniki.naprawa <= 50
-//		    || Gra.wskazniki.kluczDoWindy == false 
 		    || Gra.czyPotrzebujeKluczaDoWindy ) {
 			return true;
 		} else {
@@ -124,10 +127,9 @@ public class DoneEnemyAI : MonoBehaviour
 			 { "czas", Gra.wskaznikiBolu.czas }
 			,{ "bateria", Gra.wskaznikiBolu.bateria }
 			,{ "naprawa", Gra.wskaznikiBolu.naprawa }
-//			,{ "kluczDoWindy", Gra.wskaznikiBolu.kluczDoWindy ? 0f : 1f } //jeśli nie mam klucza to ustawiam 1 w przeciwnym razie 0
 		};
 
-		if (Gra.czyPotrzebujeKluczaDoWindy) dict.Add ("kluczDoWindy", 1f); //TODO dawać jakąś lepszą wartość
+		if (Gra.czyPotrzebujeKluczaDoWindy) dict.Add ("kluczDoWindy", 50f/Gra.slownikPriorytetow["kluczDoWindy"]);
 
 		var max = dict.Values.Max();
 		var relevantKey = dict
