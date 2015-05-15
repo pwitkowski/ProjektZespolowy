@@ -10,6 +10,9 @@ public static class Gra
 	public static float szybkoscRozladowaniaBaterii = 0.02f;
 	public static Wskazniki wskazniki = new Wskazniki(1,600f,100f,100f,false);
 
+	//wartosc krytyczna dla wskaznikow
+	public static float wartoscKrytyczna = 50f;
+
 	//zapamiętujemy wartości początkowe. Potrzebne przy restarcie.
 	public static Wskazniki wskaznikiPoczatkowe = new Wskazniki(1,600f,100f,100f,false);
 

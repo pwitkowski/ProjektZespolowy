@@ -55,9 +55,9 @@ public class DoneEnemyAI : MonoBehaviour
 
 	bool czyPoprawicWskazniki (){
 		//zakładam, że wskaźniki muszą utrymywać sie na poziomie 50%
-		if (ObslugaWskaznikow.DajIloscCzasuWPrzeliczeniuNaProcent() <= 50
-			|| Gra.wskazniki.bateria <= 50
-			|| Gra.wskazniki.naprawa <= 50
+		if (ObslugaWskaznikow.DajIloscCzasuWPrzeliczeniuNaProcent() <= Gra.wartoscKrytyczna
+		    || Gra.wskazniki.bateria <=  Gra.wartoscKrytyczna
+		    || Gra.wskazniki.naprawa <=  Gra.wartoscKrytyczna
 		    || Gra.czyPotrzebujeKluczaDoWindy ) {
 			return true;
 		} else {
