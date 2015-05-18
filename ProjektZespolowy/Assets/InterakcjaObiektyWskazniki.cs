@@ -101,9 +101,11 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 					gameObject.active = false;
 					break;
 				case "door_exit_outer":
-					Gra.WyswietlKomunikatWChmurze("Potrzebuje klucza do windy");
-					Gra.czyPotrzebujeKluczaDoWindy = true;
-					Gra.czyZnalazlemWyjscie = true;
+					if(!Gra.czyZnalazlemKluczDoWindy){
+						Gra.WyswietlKomunikatWChmurze("Potrzebuje klucza do windy");
+						Gra.czyPotrzebujeKluczaDoWindy = true;
+						Gra.czyZnalazlemWyjscie = true;
+					}
 					break;
 			}
 		}

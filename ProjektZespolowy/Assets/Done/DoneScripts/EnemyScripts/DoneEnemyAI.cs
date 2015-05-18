@@ -23,6 +23,7 @@ public class DoneEnemyAI : MonoBehaviour
 	private Vector3 punkt;
 	private List<string> listaPunktowDoWyboru = new List<string>();
 	private Vector3 wyjscie;
+	private String komunikat = "";
 
 	void Awake (){
 		// Setting up the references.
@@ -41,10 +42,16 @@ public class DoneEnemyAI : MonoBehaviour
 
 		//jeśli dojdzie do kolejnego punktu na mapie podejmuje decyzję
 		if (nav.destination == punkt || nav.remainingDistance < nav.stoppingDistance){
+			//czyszczę komunikat podjętej decyzji
+			komunikat = "";
+
 			//podejmowanie decyzji
 			stanWydostanieSieZWiezienia ();
 			
 			if(czyPoprawicWskazniki()) stanPoprawaWskaznikow ();
+
+			//wyświetlam komunikat podjętej decyzji
+			if(komunikat != null && komunikat.Length > 0) Gra.WyswietlKomunikatWChmurze(komunikat);
 		}
 		
 		//ide do punktu na mapie
@@ -68,7 +75,7 @@ public class DoneEnemyAI : MonoBehaviour
 
 		//jeśli znam wyjście i mam klucz do windy to uciekam z więzienia
 		if (Gra.czyZnalazlemWyjscie && Gra.czyZnalazlemKluczDoWindy) {
-			Gra.WyswietlKomunikatWChmurze("Uciekam z wiezienia");
+			komunikat = "Uciekam z wiezienia !";
 			nav.speed = chaseSpeed;
 			punkt = wyjscie;
 			return;
@@ -91,7 +98,7 @@ public class DoneEnemyAI : MonoBehaviour
 			int index = r.Next (0, listaPunktowDoWyboru.Count);
 			string nazwaPunktu = listaPunktowDoWyboru [index];
 			//print ("Idę do punktu: " + nazwaPunktu);
-			Gra.WyswietlKomunikatWChmurze("Ide do punktu: " + nazwaPunktu);
+			komunikat = "Ide do punktu: " + nazwaPunktu;
 			punkt = (Vector3)Gra.tablicaPunktow [nazwaPunktu];
 		}
 	}	
@@ -125,10 +132,10 @@ public class DoneEnemyAI : MonoBehaviour
 		}
 
 		if (Gra.tablicaPozycjiRozpoznanychArtefaktow.Contains (artefakt)) {
-			Gra.WyswietlKomunikatWChmurze ("Ide zaspokoic potrzebe "+potrzeba);
+			komunikat = "Ide zaspokoic potrzebe "+potrzeba;
 			return true;
 		} else {
-			Gra.WyswietlKomunikatWChmurze ("Nie wiem jak zaspokoic potrzebe "+potrzeba);
+			komunikat = "Nie wiem jak zaspokoic potrzebe "+potrzeba;
 			return false;
 		}
 	}
