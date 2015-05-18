@@ -37,7 +37,11 @@ public static class Gra
 		{"kluczDoWindy", 5},
 		{"poznawanieArtefaktow", 6}
 	};
+
+	//flagi pozwalające na wyjście z gry ( wydostanie się z więzienia)
 	public static bool czyPotrzebujeKluczaDoWindy = false;
+	public static bool czyZnalazlemKluczDoWindy = false;
+	public static bool czyZnalazlemWyjscie = false;
 
 	//komunikaty "chmurka"
 	public static Queue<string> kolejkaKomunikatow = new Queue<string>();

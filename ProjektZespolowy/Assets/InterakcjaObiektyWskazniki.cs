@@ -8,7 +8,7 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 	private GameObject poleWidzenia;
 	private NavMeshAgent agent;
 	private float uszkodzeniaBaterii = 10f;
-	private float uszkodzeniaNaprawy = 50f;
+	private float uszkodzeniaNaprawy = 30f;
 	private float doladowanieCzasu = 200f;
 
 	//potrzebne do zapisywania wskaźników przed i po podjęciu decyzji
@@ -97,11 +97,13 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 					dodajWspomnieniePoUzyciuArtefaktuDoTablicy(collider, wskaznikiPrzed);
 					
 					Gra.WyswietlKomunikatWChmurze("Znalazlem klucz do windy");
+					Gra.czyZnalazlemKluczDoWindy = true;
 					gameObject.active = false;
 					break;
 				case "door_exit_outer":
 					Gra.WyswietlKomunikatWChmurze("Potrzebuje klucza do windy");
 					Gra.czyPotrzebujeKluczaDoWindy = true;
+					Gra.czyZnalazlemWyjscie = true;
 					break;
 			}
 		}
@@ -130,7 +132,8 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 		wskaznikiBulu.czas = Gra.wskazniki.czas - wskaznikiPrzedParam.czas;
 		wskaznikiBulu.bateria = Gra.wskazniki.bateria - wskaznikiPrzedParam.bateria;
 		wskaznikiBulu.naprawa = Gra.wskazniki.naprawa - wskaznikiPrzedParam.naprawa;
-		wskaznikiBulu.kluczDoWindy = Gra.wskazniki.kluczDoWindy;
+		//jeśli w poprzednich wskaźnikach nie było klucza a teraz jest to ustawiam na true
+		wskaznikiBulu.kluczDoWindy = Gra.wskazniki.kluczDoWindy && !wskaznikiPrzed.kluczDoWindy;
 
 		print ("Wskazniki bulu dla : "+collider.name+" to:"+ wskaznikiBulu.ToString ());
 
@@ -145,8 +148,11 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 
 	void dodajDoTablicyPozycjiRozpoznanychArtefaktow (Collider collider){
 		//dodaje nazwę artefaktu i pozycje do tablicy rozpoznanyh artefaktów
-		if (!Gra.tablicaPozycjiRozpoznanychArtefaktow.Contains (collider.name)) {
-			Gra.tablicaPozycjiRozpoznanychArtefaktow.Add(collider.name, collider.transform.position);
+		if (collider != null && collider.name != null && collider.name.Length > 0) {
+			if (!Gra.tablicaPozycjiRozpoznanychArtefaktow.Contains (collider.name)) {
+				print ("Dodaje rozpoznany artefakt: " + collider.name + " na pozycji: " + collider.transform.position);
+				Gra.tablicaPozycjiRozpoznanychArtefaktow.Add (collider.name, collider.transform.position);
+			}
 		}
 	}
 

@@ -51,8 +51,12 @@ public class ObslugaWskaznikow: MonoBehaviour {
 		Gra.wskazniki.naprawa = Gra.wskaznikiPoczatkowe.naprawa;
 		Gra.wskazniki.kluczDoWindy = Gra.wskaznikiPoczatkowe.kluczDoWindy;
 
-		//czyszcze dane tj. kolejkaKomunikatów itp.
+		//czyszcze dane tj. kolejkaKomunikatów, flagi itp.
 		Gra.kolejkaKomunikatow = new System.Collections.Generic.Queue<string>();
+		//szukam klucz od nowa
+		Gra.czyZnalazlemKluczDoWindy = false;
+		//jeśli znalazłem wyjście i nie mam klucza do windy to ustawiam na true
+		Gra.czyPotrzebujeKluczaDoWindy = Gra.czyZnalazlemWyjscie && !Gra.czyZnalazlemKluczDoWindy;
 	}
 	
 	// Update is called once per frame

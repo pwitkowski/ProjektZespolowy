@@ -52,12 +52,17 @@ public class Ustawienia : MonoBehaviour {
 		Gra.wskazniki.czas = Gra.iloscCzasuWSekundach * (suwakCzas.value / 100); 
 		Gra.wskazniki.bateria = suwakBateria.value;
 		Gra.wskazniki.naprawa = suwakNaprawa.value;
-		Gra.wskazniki.kluczDoWindy = false; //TODO dodać do ustawień checkbox czy ma klucz do windy
+
+		//TODO dodać do ustawień checkboxy czy ma klucz do windy itp.
+		Gra.wskazniki.kluczDoWindy = false; 
+		Gra.czyPotrzebujeKluczaDoWindy = false;
+		Gra.czyZnalazlemKluczDoWindy = false;
+		Gra.czyZnalazlemWyjscie = false;
 
 		Gra.wskaznikiPoczatkowe.czas = Gra.wskazniki.czas;
 		Gra.wskaznikiPoczatkowe.bateria = Gra.wskazniki.bateria;
 		Gra.wskaznikiPoczatkowe.naprawa = Gra.wskazniki.naprawa;
-		Gra.wskaznikiPoczatkowe.kluczDoWindy = Gra.wskazniki.kluczDoWindy;
+		Gra.wskaznikiPoczatkowe.kluczDoWindy = Gra.wskazniki.kluczDoWindy;// czyli false
 
 		Gra.ResumeGame();
 		Gra.RestartGame();

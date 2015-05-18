@@ -14,4 +14,5 @@ public class DoneTags : MonoBehaviour
 	public const string cialoRobota = "CialoRobota";
 	public const string poleWidzenia = "PoleWidzenia";
 	public const string artefakt = "Artefakt";
+	public const string wyjscie = "Wyjscie";
 }

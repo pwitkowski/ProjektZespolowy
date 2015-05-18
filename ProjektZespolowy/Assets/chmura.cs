@@ -8,7 +8,7 @@ public class Chmura : MonoBehaviour {
 	public Transform kamera;
 	public GameObject canvasChmurka;
 	public Text textChmura;
-	public float czasWyswietlaniaChmury; //ustawiane w unity
+	public float czasWyswietlaniaChmury = 2f; //ustawiane w unity
 
 	private float stoper = 0f;
 	
@@ -28,7 +28,9 @@ public class Chmura : MonoBehaviour {
 			//print("Kolejka komunikatów jest pusta");
 		}
 
+
 		if (komunikat != null && komunikat.Length > 0) {
+
 			//jeśli gra nie jest zastopowana to zwiekszam stoper
 			if(!Gra.pauza) stoper += Time.deltaTime;
 

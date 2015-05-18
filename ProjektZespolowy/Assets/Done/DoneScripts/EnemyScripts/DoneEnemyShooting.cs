@@ -12,8 +12,8 @@ public class DoneEnemyShooting : MonoBehaviour
 	
 	private Animator anim;								// Reference to the animator.
 	private DoneHashIDs hash;							// Reference to the HashIDs script.
-	private LineRenderer laserShotLine;					// Reference to the laser shot line renderer.
-	private Light laserShotLight;						// Reference to the laser shot light.
+//	private LineRenderer laserShotLine;					// Reference to the laser shot line renderer.
+//	private Light laserShotLight;						// Reference to the laser shot light.
 	private SphereCollider col;							// Reference to the sphere collider.
 	private Transform player;							// Reference to the player's transform.
 	private DonePlayerHealth playerHealth;				// Reference to the player's health.
@@ -25,16 +25,16 @@ public class DoneEnemyShooting : MonoBehaviour
 	{
 		// Setting up the references.
 		anim = GetComponent<Animator>();
-		laserShotLine = GetComponentInChildren<LineRenderer>();
-		laserShotLight = laserShotLine.gameObject.light;
+//		laserShotLine = GetComponentInChildren<LineRenderer>();
+//		laserShotLight = laserShotLine.gameObject.light;
 		col = GetComponent<SphereCollider>();
 		player = GameObject.FindGameObjectWithTag(DoneTags.player).transform;
 		playerHealth = player.gameObject.GetComponent<DonePlayerHealth>();
 		hash = GameObject.FindGameObjectWithTag(DoneTags.gameController).GetComponent<DoneHashIDs>();
 		
 		// The line renderer and light are off to start.
-		laserShotLine.enabled = false;
-		laserShotLight.intensity = 0f;
+//		laserShotLine.enabled = false;
+//		laserShotLight.intensity = 0f;
 		
 		// The scaledDamage is the difference between the maximum and the minimum damage.
 		scaledDamage = maximumDamage - minimumDamage;
@@ -56,11 +56,11 @@ public class DoneEnemyShooting : MonoBehaviour
 		{
 			// ... the enemy is no longer shooting and disable the line renderer.
 			shooting = false;
-			laserShotLine.enabled = false;
+//			laserShotLine.enabled = false;
 		}
 		
 		// Fade the light out.
-		laserShotLight.intensity = Mathf.Lerp(laserShotLight.intensity, 0f, fadeSpeed * Time.deltaTime);
+//		laserShotLight.intensity = Mathf.Lerp(laserShotLight.intensity, 0f, fadeSpeed * Time.deltaTime);
 	}
 	
 	
@@ -99,18 +99,18 @@ public class DoneEnemyShooting : MonoBehaviour
 	void ShotEffects ()
 	{
 		// Set the initial position of the line renderer to the position of the muzzle.
-		laserShotLine.SetPosition(0, laserShotLine.transform.position);
+//		laserShotLine.SetPosition(0, laserShotLine.transform.position);
 		
 		// Set the end position of the player's centre of mass.
-		laserShotLine.SetPosition(1, player.position + Vector3.up * 1.5f);
+//		laserShotLine.SetPosition(1, player.position + Vector3.up * 1.5f);
 		
 		// Turn on the line renderer.
-		laserShotLine.enabled = true;
+//		laserShotLine.enabled = true;
 		
 		// Make the light flash.
-		laserShotLight.intensity = flashIntensity;
+//		laserShotLight.intensity = flashIntensity;
 		
 		// Play the gun shot clip at the position of the muzzle flare.
-		AudioSource.PlayClipAtPoint(shotClip, laserShotLight.transform.position);
+//		AudioSource.PlayClipAtPoint(shotClip, laserShotLight.transform.position);
 	}
 }

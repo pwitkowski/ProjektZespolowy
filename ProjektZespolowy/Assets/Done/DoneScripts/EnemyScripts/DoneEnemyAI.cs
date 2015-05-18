@@ -22,6 +22,7 @@ public class DoneEnemyAI : MonoBehaviour
 	private int wayPointIndex;								// A counter for the way point array.
 	private Vector3 punkt;
 	private List<string> listaPunktowDoWyboru = new List<string>();
+	private Vector3 wyjscie;
 
 	void Awake (){
 		// Setting up the references.
@@ -31,13 +32,10 @@ public class DoneEnemyAI : MonoBehaviour
 		playerHealth = player.GetComponent<DonePlayerHealth>();
 		lastPlayerSighting = GameObject.FindGameObjectWithTag(DoneTags.gameController).GetComponent<DoneLastPlayerSighting>();
 		punkt = new Vector3();
+		wyjscie = GameObject.FindGameObjectWithTag(DoneTags.wyjscie).transform.position;
 	}
 	
 	void Update (){
-//		if (nav.speed == 0) {
-//			Gra.WyswietlKomunikatWChmurze("Nie ide dalej !");
-//		}
-
 		//ustawiam szybkosc
 		nav.speed = patrolSpeed;
 
@@ -67,6 +65,15 @@ public class DoneEnemyAI : MonoBehaviour
 
 	void stanWydostanieSieZWiezienia (){
 		print("Stan wydostanieSieZWiezienia");
+
+		//jeśli znam wyjście i mam klucz do windy to uciekam z więzienia
+		if (Gra.czyZnalazlemWyjscie && Gra.czyZnalazlemKluczDoWindy) {
+			Gra.WyswietlKomunikatWChmurze("Uciekam z wiezienia");
+			nav.speed = chaseSpeed;
+			punkt = wyjscie;
+			return;
+		}
+
 		//biore pierwszy nieodwiedzony punkt z tablicy
 		listaPunktowDoWyboru = new List<string> ();
 		foreach (DictionaryEntry p in Gra.tablicaPunktow) {
@@ -91,6 +98,10 @@ public class DoneEnemyAI : MonoBehaviour
 
 	void stanPoprawaWskaznikow (){
 		print ("Stan poprawa wskaznikow");
+
+		//jeśli znam wyjście i mam klucz do windy to nie poprawiam wskaźników tylko uciekam
+		if (Gra.czyZnalazlemWyjscie && Gra.czyZnalazlemKluczDoWindy) return;
+
 		if (czyZnamArtefaktKtoryZaspokoiMojePotrzeby()) {
 			//jeśli znam artefakt który zaspokoi moje potrzeby to ide do niego
 			punkt = dajPozycjeArtefaktoKtoryZaspokoiMojePotrzeby(dajNazweArtefaktuKtoryNajbardziejZaspokajaMojaPotrzebe(dajAktualnaPorzebeDoZaspokojenia()));
@@ -114,6 +125,7 @@ public class DoneEnemyAI : MonoBehaviour
 		}
 
 		if (Gra.tablicaPozycjiRozpoznanychArtefaktow.Contains (artefakt)) {
+			Gra.WyswietlKomunikatWChmurze ("Ide zaspokoic potrzebe "+potrzeba);
 			return true;
 		} else {
 			Gra.WyswietlKomunikatWChmurze ("Nie wiem jak zaspokoic potrzebe "+potrzeba);
