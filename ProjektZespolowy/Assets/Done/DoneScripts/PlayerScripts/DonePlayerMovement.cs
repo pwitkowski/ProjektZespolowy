@@ -42,7 +42,7 @@ public class DonePlayerMovement : MonoBehaviour
 		// Set the animator shouting parameter.
 		anim.SetBool(hash.shoutingBool, shout);
 		
-		AudioManagement(shout);
+//		AudioManagement(shout);
 	}
 	
 	
@@ -56,7 +56,7 @@ public class DonePlayerMovement : MonoBehaviour
 		{
 			// ... set the players rotation and set the speed parameter to 5.5f.
 			Rotating(horizontal, vertical);
-			anim.SetFloat(hash.speedFloat, 5.5f, speedDampTime, Time.deltaTime);
+			anim.SetFloat(hash.speedFloat, 10f, speedDampTime, Time.deltaTime);
 		}
 		else
 			// Otherwise set the speed parameter to 0.

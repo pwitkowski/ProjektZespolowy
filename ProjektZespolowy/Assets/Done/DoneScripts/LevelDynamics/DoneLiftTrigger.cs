@@ -10,6 +10,7 @@ public class DoneLiftTrigger : MonoBehaviour
 	
 	
 	private GameObject player;							// Reference to the player.
+	private GameObject cialoRobota;
 	private Animator playerAnim;						// Reference to the players animator component.
 	private DoneHashIDs hash;							// Reference to the HashIDs script.
 	private DoneCameraMovement camMovement;				// Reference to the camera movement script.
@@ -23,6 +24,7 @@ public class DoneLiftTrigger : MonoBehaviour
 	{
 		// Setting up references.
 		player = GameObject.FindGameObjectWithTag(DoneTags.player);
+		cialoRobota = GameObject.FindGameObjectWithTag(DoneTags.cialoRobota);
 		playerAnim = player.GetComponent<Animator>();
 		hash = GameObject.FindGameObjectWithTag(DoneTags.gameController).GetComponent<DoneHashIDs>();
 		camMovement = Camera.main.gameObject.GetComponent<DoneCameraMovement>();
@@ -34,7 +36,7 @@ public class DoneLiftTrigger : MonoBehaviour
 	void OnTriggerEnter (Collider other)
 	{
 		// If the colliding gameobject is the player...
-		if(other.gameObject == player)
+		if(other.gameObject == cialoRobota)
 			// ... the player is in the lift.
 			playerInLift = true;
 	}
@@ -43,7 +45,7 @@ public class DoneLiftTrigger : MonoBehaviour
 	void OnTriggerExit (Collider other)
 	{
 		// If the player leaves the trigger area...
-		if(other.gameObject == player)
+		if(other.gameObject == cialoRobota)
 		{
 			// ... reset the timer, the player is no longer in the lift and unparent the player from the lift.
 			playerInLift = false;
