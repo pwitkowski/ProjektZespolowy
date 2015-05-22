@@ -6,7 +6,9 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 {
 	private GameObject cialoRobota;
 	private GameObject poleWidzenia;
-	private NavMeshAgent agent;
+	private NavMeshAgent nawAgent;
+	private Animator playerAnim;
+	private DoneHashIDs hash;
 	private float uszkodzeniaBaterii = 10f;
 	private float uszkodzeniaNaprawy = 30f;
 	private float doladowanieCzasu = 200f;
@@ -17,7 +19,9 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 	void Awake (){
 		cialoRobota =  GameObject.FindGameObjectWithTag(DoneTags.cialoRobota);
 		poleWidzenia = GameObject.FindGameObjectWithTag(DoneTags.poleWidzenia);
-		agent = GameObject.FindGameObjectWithTag(DoneTags.player).GetComponent<NavMeshAgent>();
+		nawAgent = GameObject.FindGameObjectWithTag(DoneTags.player).GetComponent<NavMeshAgent>();
+		playerAnim = GameObject.FindGameObjectWithTag(DoneTags.player).GetComponent<Animator>();
+		hash = GameObject.FindGameObjectWithTag(DoneTags.gameController).GetComponent<DoneHashIDs>();
 	}
 		
 	void OnTriggerEnter (Collider other){
@@ -25,19 +29,13 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 			//print ("Ciało robota dotyka: " + collider.name);
 			switch (colliderNazwaZawiera (collider.name)) {
 				case "lasery":
-//					if(Gra.tablicaPozycjiRozpoznanychArtefaktow.Contains(collider.name)){
-//						agent.Stop();
-//						agent.speed = 0f;
-//						Gra.WyswietlKomunikatWChmurze("Znam juz to dziadostwo.\n Nie wchodze w to !");
-//					}else {
-						wskaznikiPrzed = new Wskazniki(Gra.wskazniki);
-						Gra.wskazniki.naprawa -= uszkodzeniaNaprawy;
-						Gra.wskazniki.bateria -= uszkodzeniaBaterii;
-						
-						dodajWspomnieniePoUzyciuArtefaktuDoTablicy(collider, wskaznikiPrzed);
+					wskaznikiPrzed = new Wskazniki(Gra.wskazniki);
+					Gra.wskazniki.naprawa -= uszkodzeniaNaprawy;
+					Gra.wskazniki.bateria -= uszkodzeniaBaterii;
+					
+					dodajWspomnieniePoUzyciuArtefaktuDoTablicy(collider, wskaznikiPrzed);
 
-						Gra.WyswietlKomunikatWChmurze("Bateria: -" + zaokraglij(uszkodzeniaBaterii) + ", Naprawa -" + zaokraglij(uszkodzeniaNaprawy));
-//					}
+					Gra.WyswietlKomunikatWChmurze("Bateria: -" + zaokraglij(uszkodzeniaBaterii) + ", Naprawa -" + zaokraglij(uszkodzeniaNaprawy));
 					break;
 				case "bateria":
 					if (Gra.wskazniki.bateria < 100) {
@@ -103,6 +101,11 @@ public class InterakcjaObiektyWskazniki : MonoBehaviour
 				case "door_exit_outer":
 					if(!Gra.czyZnalazlemKluczDoWindy){
 						Gra.WyswietlKomunikatWChmurze("Potrzebuje klucza do windy");
+						
+						//zatrzymuje robota
+						nawAgent.Stop(true);
+						playerAnim.SetFloat(hash.speedFloat,0f);
+
 						Gra.czyPotrzebujeKluczaDoWindy = true;
 						Gra.czyZnalazlemWyjscie = true;
 					}

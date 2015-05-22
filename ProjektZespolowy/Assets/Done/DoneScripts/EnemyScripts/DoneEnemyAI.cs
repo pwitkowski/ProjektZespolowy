@@ -24,6 +24,8 @@ public class DoneEnemyAI : MonoBehaviour
 	private List<string> listaPunktowDoWyboru = new List<string>();
 	private Vector3 wyjscie;
 	private String komunikat = "";
+	private Animator playerAnim;
+	private DoneHashIDs hash;
 
 	void Awake (){
 		// Setting up the references.
@@ -34,14 +36,20 @@ public class DoneEnemyAI : MonoBehaviour
 		lastPlayerSighting = GameObject.FindGameObjectWithTag(DoneTags.gameController).GetComponent<DoneLastPlayerSighting>();
 		punkt = new Vector3();
 		wyjscie = GameObject.FindGameObjectWithTag(DoneTags.wyjscie).transform.position;
+		playerAnim = GameObject.FindGameObjectWithTag(DoneTags.player).GetComponent<Animator>();
+		hash = GameObject.FindGameObjectWithTag(DoneTags.gameController).GetComponent<DoneHashIDs>();
 	}
 	
 	void Update (){
-		//ustawiam szybkosc
-		nav.speed = patrolSpeed;
+		//jeśli dojdzie do kolejnego punktu na mapie 
+		//lub jeśli robot się zatrzymał to podejmuje kolejną decyzję
+		if (nav.destination == punkt 
+		    || nav.remainingDistance < nav.stoppingDistance
+		    || playerAnim.GetFloat(hash.speedFloat) == 0f){
 
-		//jeśli dojdzie do kolejnego punktu na mapie podejmuje decyzję
-		if (nav.destination == punkt || nav.remainingDistance < nav.stoppingDistance){
+			//ustawiam szybkosc
+			nav.speed = patrolSpeed;
+
 			//czyszczę komunikat podjętej decyzji
 			komunikat = "";
 

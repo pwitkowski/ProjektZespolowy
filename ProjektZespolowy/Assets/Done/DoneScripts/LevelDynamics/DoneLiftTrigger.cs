@@ -11,7 +11,7 @@ public class DoneLiftTrigger : MonoBehaviour
 	
 	private GameObject player;							// Reference to the player.
 	private GameObject cialoRobota;
-	private NavMeshAgent navAgent;
+	private NavMeshAgent nawAgent;
 	private Animator playerAnim;						// Reference to the players animator component.
 	private DoneHashIDs hash;							// Reference to the HashIDs script.
 	private DoneCameraMovement camMovement;				// Reference to the camera movement script.
@@ -25,7 +25,7 @@ public class DoneLiftTrigger : MonoBehaviour
 	{
 		// Setting up references.
 		player = GameObject.FindGameObjectWithTag(DoneTags.player);
-		navAgent = player.GetComponent<NavMeshAgent>();
+		nawAgent = player.GetComponent<NavMeshAgent>();
 		cialoRobota = GameObject.FindGameObjectWithTag(DoneTags.cialoRobota);
 		playerAnim = player.GetComponent<Animator>();
 		hash = GameObject.FindGameObjectWithTag(DoneTags.gameController).GetComponent<DoneHashIDs>();
@@ -82,7 +82,7 @@ public class DoneLiftTrigger : MonoBehaviour
 		if(timer >= timeToLiftStart)
 		{
 			// ... stop the player and the camera moving and parent the player to the lift.
-			navAgent.Stop(true);
+			nawAgent.Stop(true);
 			playerAnim.SetFloat(hash.speedFloat,0f);
 			camMovement.enabled = false;
 			player.transform.parent = transform;
@@ -99,6 +99,7 @@ public class DoneLiftTrigger : MonoBehaviour
 //			if(timer >= timeToEndLevel)
 				// ... call the EndScene function.
 				sceneFadeInOut.EndScene();
+			//TODO poprawić kończenie sceny
 		}
 	}
 }
