@@ -5,12 +5,13 @@ public class DoneLiftTrigger : MonoBehaviour
 {
 	public float timeToDoorsClose = 2f;					// Time since the player entered the lift before the doors close.
 	public float timeToLiftStart = 3f;					// Time since the player entered the lift before it starts to move.
-	public float timeToEndLevel = 6f;					// Time since the player entered the lift before the level ends.
+//	public float timeToEndLevel = 6f;					// Time since the player entered the lift before the level ends.
 	public float liftSpeed = 3f;						// The speed at which the lift moves.
 	
 	
 	private GameObject player;							// Reference to the player.
 	private GameObject cialoRobota;
+	private NavMeshAgent navAgent;
 	private Animator playerAnim;						// Reference to the players animator component.
 	private DoneHashIDs hash;							// Reference to the HashIDs script.
 	private DoneCameraMovement camMovement;				// Reference to the camera movement script.
@@ -24,6 +25,7 @@ public class DoneLiftTrigger : MonoBehaviour
 	{
 		// Setting up references.
 		player = GameObject.FindGameObjectWithTag(DoneTags.player);
+		navAgent = player.GetComponent<NavMeshAgent>();
 		cialoRobota = GameObject.FindGameObjectWithTag(DoneTags.cialoRobota);
 		playerAnim = player.GetComponent<Animator>();
 		hash = GameObject.FindGameObjectWithTag(DoneTags.gameController).GetComponent<DoneHashIDs>();
@@ -80,6 +82,7 @@ public class DoneLiftTrigger : MonoBehaviour
 		if(timer >= timeToLiftStart)
 		{
 			// ... stop the player and the camera moving and parent the player to the lift.
+			navAgent.Stop(true);
 			playerAnim.SetFloat(hash.speedFloat,0f);
 			camMovement.enabled = false;
 			player.transform.parent = transform;
@@ -93,7 +96,7 @@ public class DoneLiftTrigger : MonoBehaviour
 				audio.Play();
 			
 			// If the timer is greater than the amount of time before the level should end...
-			if(timer >= timeToEndLevel)
+//			if(timer >= timeToEndLevel)
 				// ... call the EndScene function.
 				sceneFadeInOut.EndScene();
 		}
